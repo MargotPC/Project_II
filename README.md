@@ -7,4 +7,4 @@
 * ARNAU CORTÉS LLAMAS
 * MARGOT INES PACO CHIPANA
 
-Collaborator: Elena Garcia de Lamo
+Collaborator: Elena Garcia de Lamoeryr
