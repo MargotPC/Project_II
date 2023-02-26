@@ -1,0 +1,25 @@
+1. Initial state: Method that will set all the initial particles within a periodical box and assign -->
+   their initial state.
+   
+2. Boundary conditions: Method to assign particle coordinates within periodical box. -->
+
+3. Forces: Method that calculates the van der Waals forces at each particle -->
+
+4. Integration: Method to integrate Newton’s equations -->
+
+5. Statistics: Method to determine all averaged values of selected variables during simulation -->
+trajectory and showing its final values at the end of the trajectory
+
+6. Visualization of results: post-processing method that will deal with obtained data from a -->
+given trajectory and will allow to show evolution of the different variables involved in the
+molecular dynamics and other statistics at the highest level
+
+
+
+- Inicializacion+PBCs -->
+- Fuerzas+Visualización de datos -->
+- Integración -->
+- Estadística -->
+
+
+- Ajuda communitària (Elena) -->
