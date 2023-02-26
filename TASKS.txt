@@ -21,5 +21,4 @@ molecular dynamics and other statistics at the highest level
 - Integración -->
 - Estadística --> Arnau G
 
-
-- Ajuda communitària (Elena) -->
+- Ajuda communitària --> Elena García de Lamo
