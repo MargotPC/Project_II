@@ -1,0 +1,53 @@
+Since everyone will work on its own code but we will have to merge them all, I think it is usefull to have some gidelines about how to write this code. Here are some ideas.
+
+################# BASIC RULES (Fortran) ###################
+
+1. Variable names must be self-explainatory and in english.
+	--> For example we could use "temp" as temperature better than just "t".
+	--> Eventhough fortran ignores capital letters, it is better to avoid names such as "Temp".
+	--> Remember using "implicit none".
+
+2. Use an space between the variable definition and its value.
+	--> Use "temp = 30.d0" rather than "temp=30.d0"
+	--> This may apply to +- signs but its not relevant
+
+3. Idetate the code properly when using loops or conditionals. Fortran doesn't care about indetation but humans do :)
+
+4. Since we will be using other people's codes, add comments to your code to explain what it does, how it works, and why you made certain decisions. 
+	--> Indicate what is your code doing at every step. For example, !calculate the forces of the 	system, !reset all varaibles, etc.
+	--> Docking functions and subroutines is key for others to understand how to work with your 	code. Here's an example of how I do it:
+
+subroutine time_step_v_verlet(pos,vel,L,dt,npar,cutoff)
+
+    !===========================================================
+    ! Performs one velocity Verlet time-step.
+    !-----------------------------------------------------------
+    ! ... INPUT ...
+    ! pos - real*8,dimension(npar,3) : matrix containning the x,y,z 
+    !       coordinates of the npar particles.
+    ! vel - real*8,dimension(npar,3) : matrix containning the  
+    !            x,y,z coordinates of the velocity of the npar particles.
+    ! L - real*8 : dimension of the simmulation box. 
+    ! dt - real*8 : size of the time step.
+    ! npar - integer : number of particles of the system.
+    ! cutoff - real*8 : cutoff applied to the system
+    !
+    ! ... OUTPUT ...
+    ! pos - real*8,dimension(npar,3) : matrix containning the new x,y,z 
+    !       coordinates of the npar particles once pdb have been applied.
+    ! vel - real*8,dimension(npar,3) : matrix containning the new 
+    !            x,y,z coordinates of the velocity of the npar particles.
+    !===========================================================
+
+    real*8 :: L,cutoff2,cutoff6,cutoff4,cutoff12,Upot,dt,cutoff 
+    real*8,dimension(npar,3) :: pos,F,lj_force,vel
+    integer :: npar
+    logical :: pb
+
+5. Since we are using fortran 90, AVOID THE "GO TO" STATEMENT AT ANY COST.
+
+6. Use doble precision (real*8 :: variable_name) instead of (real :: variable_name) in order to avoid problems with number precision between all of our codes. 
+	--> Fortran is so sneeky with errors due to precision.
+	--> When defining a variable use the "d0" statement.
+	--> when turning an integer to a float use (dble())
+
