@@ -17,10 +17,8 @@ molecular dynamics and other statistics at the highest level
 
 
 - Inicializacion+PBCs -->
-- Fuerzas+Visualización de datos -->
-- Integración --> 
-- Estadística -->
-
-
+- Fuerzas+Visualización de datos --> Arnau C
+- Integración -->
+- Estadística --> Arnau G
 
 - Ajuda communitària --> Elena García de Lamo
