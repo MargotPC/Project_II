@@ -1,7 +1,7 @@
 1. Initial state: Method that will set all the initial particles within a periodical box and assign -->
    their initial state.
    
-2. Boundary conditions: Method to assign particle coordinates within periodical box. -->
+2. Boundary conditions: Method to assign particle coordinates with periodical box. -->
 
 3. Forces: Method that calculates the van der Waals forces at each particle -->
 
@@ -16,9 +16,9 @@ molecular dynamics and other statistics at the highest level
 
 
 
-- Inicializacion+PBCs -->
+- Inicializacion+PBCs --> Margot
 - Fuerzas+Visualización de datos --> Arnau C
-- Integración -->
+- Integración --> Albert
 - Estadística --> Arnau G
 
 - Ajuda communitària --> Elena García de Lamo
