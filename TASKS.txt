@@ -17,8 +17,8 @@ molecular dynamics and other statistics at the highest level
 
 
 - Inicializacion+PBCs -->
-- Fuerzas+Visualización de datos -->
-- Integración -->
+- Fuerzas+Visualización de datos --> Albert
+- Integración --> 
 - Estadística -->
 
 
