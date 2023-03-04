@@ -74,3 +74,5 @@ subroutine pbc(pos,l_box)
 	return
 	
 end subroutine pbc
+
+end module init_pbc
