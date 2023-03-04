@@ -6,7 +6,7 @@
 !       coordinates of the npar particles.
 ! L - real*8 : dimension of the simmulation box. 
 ! N - integer : number of particles of the system.
-! cutoff - real*8 : cutoof applied to the system.
+! cutoff - real*8 : cutoff applied to the system.
 !
 ! ... OUTPUT ...
 ! upot_pbc - real*8 : potential energy of the system.
@@ -49,7 +49,7 @@ do i = 1,N-1
          !Here the potential energy of the system is computed.
          upot_pbc = upot_pbc + 4.0*((1.0/d12) - (1.0/d6)) - 4.0*((1.0/cf12) - (1.0/cf6))
 
-         !Here the forces  for each particle is calculated.
+         !Here the forces  for each particle are calculated.
          force(i,1) = force(i,1) + (48/d14-24/d8)*rij(1)
          force(i,2) = force(i,2) + (48/d14-24/d8)*rij(2)
          force(i,3) = force(i,3) + (48/d14-24/d8)*rij(3)
