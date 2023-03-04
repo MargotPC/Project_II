@@ -1,3 +1,10 @@
+module module_forces
+use pbcs,only:pbc1 !this will change with the new pbcs module
+contains
+
+!This module contains the force calculation of the system.
+
+subroutine LENNARD_JONNES_FORCES(position, L, cutoff, N, upot_pbc, force)
 !===========================================================
 ! Performs the  Lennard-Jonnes forces.
 !-----------------------------------------------------------
@@ -13,14 +20,6 @@
 ! force - real*8,dimension(npar,3) : matrix containning the new 
 !            x,y,z coordinates of the forces of the npar particles.
 !===========================================================
-
-module module_forces
-use pbcs,only:pbc1 !this will change with the new pbcs module
-contains
-
-!This module contains the force calculation of the system.
-
-subroutine LENNARD_JONNES_FORCES(position, L, cutoff, N, upot_pbc, force)
 implicit none
 real*8, intent(in) :: cutoff,L
 real*8, dimension(:,:), intent(in) :: position
