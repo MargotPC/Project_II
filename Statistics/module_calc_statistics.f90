@@ -4,13 +4,13 @@ contains
 
 !This module contains the thermodynamics properties calculations.
 
-subroutine kinetic_energy(N, vel, kin)
+subroutine calc_kinetic_energy(N, vel, kin)
 !====================================
 ! Calculate the kinetic energy of the system.
 !-----------------------------------
 !...INPUT...
 ! N - integer : number of particles of the system
-! vel -  real*8, dimension(N,3) : matrix containing the velocity on each direction(vx,vy,vz)
+! vel -  real*8, dimension(N,3) : matrix containing the velocity of each particle on each direction(vx,vy,vz)
 !
 !...OUTPUT...
 ! kin - real*8 : kinetic energy of the system
@@ -36,11 +36,12 @@ subroutine calc_momentum(N, vel, total_momentum)
 !-----------------------------------
 !...INPUT...
 ! N - integer : number of particles of the system
-! vel -  real*8, dimension(N,3) : matrix containing the velocity on each direction(vx,vy,vz)
+! vel -  real*8, dimension(N,3) : matrix containing the velocity of each particle on each direction(vx,vy,vz)
 !
 !...OUTPUT...
 ! total_momentum - real*8 : total momentum of the system
 !===================================
+implicit none
 integer, intent(in) :: N
 real*8, dimension(:,:), intent(in) :: vel
 real*8, intent(out) :: total_momentum
@@ -61,31 +62,58 @@ end subroutine
 
 
 
-subroutine calc_PT(N, kin, density, cutoff, pos, P, Tempins)
+subroutine calc_Tinstant(N, vel, Tempins)
 !====================================
-! Calculate the pressure and the instant temperature of the system       
-!-----------------------------------         
-!...INPUT...                                 
-! N - integer : number of particles of the system        
-! kin -  real*8 : kinetic energy of the system
+! Calculate the instant temperature of the system
+!-----------------------------------
+!...INPUT...
+! N - integer : number of particles of the system
+! vel -  real*8, dimension(N,3) : matrix containing the velocity of each particle on each direction(vx,vy,vz)
+!
+!...OUTPUT...
+! Tempins - real*8 : instant temperature of the system
+!===================================
+implicit none
+integer, intent(in) :: N
+real*8, dimension(:,:), intent(in) :: vel
+real*8, intent(out) :: Tempins
+real*8 :: kin
+
+! Calculate the kinetic energy
+call calc_kinetic_energy(N, vel, kin)
+
+!Calculate the instant temperature
+Tempins = kin*2/(3*N)
+end subroutine        
+
+
+
+subroutine calc_pressure(N, density, cutoff, pos, P)
+!====================================
+! Calculate the pressure of the system
+!-----------------------------------
+!...INPUT...
+! N - integer : number of particles of the system
 ! density - real*8 : density of the system
 ! cutoff - real*8 : cutoff applied to the system
 ! pos - real*8, dimension(N,3) : matrix containing the position of each particle in cartesian coordinates
+! vel - real*8, dimension(N,3) : matrix containing the velocity of each particle on each direction(vx,vy,vz)
 !                                            
 !...OUTPUT...                                
 ! P - real*8 : Pressure of the system
 ! Temp_ins - real*8 : Instant temperature of the system
-!===================================                 
+!===================================    
+implicit none
 integer, intent(in) :: N
-real*8, intent(in) :: kin, density, cutoff
-real*8, dimension(:,:), intent(in) :: pos
-real*8, intent(out) :: P, Tempins
+real*8, intent(in) :: density, cutoff
+real*8, dimension(:,:), intent(in) :: pos, vel
+real*8, intent(out) :: P
 real*8, dimension(3) :: rij, Fij
-real*8 :: V, L, virial, cutoff2, d2, d4, d6, d8, d12, d14
+real*8 :: V, L, virial, cutoff2, d2, d4, d6, d8, d12, d14, Tempins
 integer :: i, j
 
 ! Calculates the instant temperature (it needs the kinetic energy).
-Tempins = kin*2/(3*N)
+call calc_Tinstant(N, vel, Tempins)
 
 ! Calculates the volume and length of the system.
 V = N/density
@@ -131,8 +159,7 @@ subroutine calc_msd(N, density, init_pos, pos, msd)
 !                                            
 !...OUTPUT...                                
 ! msd - real*8 : mean square displacement of the system      
-!===================================         
-        
+!=================================== 
 integer, intent(in) :: N
 real*8, intent(in) :: density
 real*8, dimension(:,:), intent(in) :: pos
