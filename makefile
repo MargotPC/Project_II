@@ -1,4 +1,4 @@
-programa.x: init_pbc.o module_calc_statistics.o integrators.o module_forces.o main.o
+programa.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o
 	gfortran -o programa.x init_pbc.o integrators.o module_calc_statistics.o module_forces.o main.o
 main.o: main.f90
 	gfortran -c -O3 main.f90
