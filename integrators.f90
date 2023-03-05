@@ -2,67 +2,6 @@ module integrators
 use init_pbc
 contains
 
-subroutine lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
-    !===========================================================
-    ! Calculates the value of the lennard-jonnes forces of the 
-    ! sistem of npar particles i pos positions. The function also
-    ! provides the forces of the whole system.
-    !-----------------------------------------------------------
-    ! ... INPUT ...
-    ! cutoff2 - real*8 : cutoff value (cf) squared
-    ! cutoff6 - real*8 : cf^6
-    ! cutoff12 - real*8 : cf^12
-    ! npar - integer : number of particles of the system
-    ! pos - real*8,dimension(npar,3) : matrix containning the x,y,z 
-    !       coordinates of the npar particles.
-    ! L - real*8 : dimension of the simmulation box. 
-    ! pb - logical : indicates if the periodic boundary conditions
-    !                are used (.True.) or not (.False.).
-    !
-    ! ... OUTPUT ...
-    ! Upot - real*8 : Potential energy of the system via lennard jonnes
-    ! lj_force - real*8,dimension(npar,3) : matrix containing the x,y,z
-    !            components of the force done to each particle.
-    !===========================================================
-    implicit none
-    real*8 :: cutoff6,Upot,dist2,cutoff12,dist4,dist6,dist12,cutoff2,L
-    real*8 :: dist14,dist8 
-    real*8,dimension(npar,3) :: pos,lj_force
-    integer :: npar,i,j 
-    real*8,dimension(3) :: delta
-    logical :: pb
-
-
-    
-    Upot=0.d0
-    lj_force=0.d0 
-    do i=1,npar
-        do j=i+1,npar
-
-            delta=pos(i,:)-pos(j,:)
-
-            if (pb.eqv..True.) then
-                call pbc(delta,L)
-            endif
-            dist2=delta(1)*delta(1)+delta(2)*delta(2)+delta(3)*delta(3)
-
-            if (dist2.lt.cutoff2) then
-                dist4=dist2*dist2
-                dist6=dist4*dist2
-                dist8=dist6*dist2
-                dist12=dist6*dist6
-                dist14=dist12*dist2
-
-                Upot=Upot+4.d0*(1/dist12-1/dist6)-4.d0*(1.d0/cutoff12-1.d0/cutoff6)
-                lj_force(i,:)=lj_force(i,:)+(48.d0/(dist14)-24.d0/(dist8))*delta
-                lj_force(j,:)=lj_force(j,:)-(48.d0/(dist14)-24.d0/(dist8))*delta
-            endif
-
-        enddo
-    enddo
-
-end subroutine
-
 subroutine time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel)
 
     !===========================================================
