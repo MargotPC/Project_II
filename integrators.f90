@@ -1,47 +1,7 @@
 module integrators
 use init_pbc
+use module_forces
 contains
-
-subroutine time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel)
-
-    !===========================================================
-    ! Performs one Euler time-step. 
-    !-----------------------------------------------------------
-    ! ... INPUT ...
-    ! pos - real*8,dimension(npar,3) : matrix containning the x,y,z 
-    !       coordinates of the npar particles.
-    ! L - real*8 : dimension of the simmulation box. 
-    ! dt - real*8 : size of the time step.
-    ! npar - integer : number of particles of the system
-    ! cutoff - real*8 : cutoff applied to the system
-    !
-    ! ... OUTPUT ...
-    ! vel - real*8,dimension(npar,3) : matrix containning the new x,y,z 
-    !       coordinates of the velocities for the npar particles.
-    !===========================================================
-
-    implicit none
-    real*8 :: L,cutoff2,cutoff6,cutoff4,cutoff12,Upot,dt,cutoff 
-    real*8,dimension(npar,3) :: pos,vel,lj_force
-    integer :: npar
-    logical :: pb
-
-
-    cutoff2=cutoff*cutoff
-    cutoff4=cutoff2*cutoff2
-    cutoff6=cutoff4*cutoff2
-    cutoff12=cutoff6*cutoff6
-
-    pb=.True.
-
-    call lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
-
-    pos=pos+vel*dt+0.5d0*lj_force*dt*dt
-
-    vel=vel+lj_force*dt*0.5d0
-
-end subroutine
-
 
 subroutine time_step_verlet(pos,pos_old,pos_aux,L,dt,npar,cutoff)
 
@@ -79,7 +39,7 @@ subroutine time_step_verlet(pos,pos_old,pos_aux,L,dt,npar,cutoff)
 
     pb=.True.
 
-    call lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
+    call LENNARD_JONNES_FORCES(pos, L, cutoff, npar, Upot, lj_force)
 
     pos_aux=pos
 
@@ -122,12 +82,12 @@ subroutine time_step_v_verlet(pos,vel,L,dt,npar,cutoff)
 
     pb=.True.
 
-    call lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
+    call LENNARD_JONNES_FORCES(pos, L, cutoff, npar, Upot, lj_force)
 
     pos=pos+vel*dt+0.5d0*lj_force*dt*dt
     vel=vel+lj_force*0.5d0*dt 
 
-    call lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
+    call LENNARD_JONNES_FORCES(pos, L, cutoff, npar, Upot, lj_force)
 
     vel=vel+lj_force*0.5d0*dt 
 
