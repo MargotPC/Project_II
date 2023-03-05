@@ -1,5 +1,5 @@
 module integrators
-use periodic_conditions
+use init_pbc
 contains
 
 subroutine lj_f(cutoff2,cutoff6,cutoff12,npar,pos,L,pb,Upot,lj_force)
