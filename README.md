@@ -41,7 +41,7 @@ Collaborator: Elena Garcia de Lamo
 - [ ] *Data visualization* - Python program for visualization and data representation. Plots of macroscopic observables like kinetic energy, potential energy and total momentum.
 
 <a name="3.2-para"></a>
-### 3.2. Parallelize code 
+### 3.2. Parallelized code 
 
 <a name="4-install"></a>
 ## 4. How to install 
