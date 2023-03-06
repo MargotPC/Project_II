@@ -2,13 +2,13 @@
 
 ## Table Contents
 
-1. [ List of team members ] (#1-team)
-2. [ Task distribution ] (#2-task)
-3. [ To-do list ] (#3-list)
-   1. [ Initial steps: molecular dynamics code ] (#3.1-init)
-   2. [ Paralelization of the code ] (#3.2-para)
-4. [ How to install ] (#4-install)
-5. [ Notes: about the use of special modules and other stuff ] (#5-notes)
+1. [ List of team members ](#1-team)
+2. [ Task distribution ](#2-task)
+3. [ To-do list ](#3-list)
+   1. [ Initial steps: molecular dynamics code ](#3.1-init)
+   2. [ Paralelization of the code ](#3.2-para)
+4. [ How to install ](#4-install)
+5. [ Notes: about the use of special modules and other stuff ](#5-notes)
 
 
 <a name="1-team"></a>
