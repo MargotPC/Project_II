@@ -1,4 +1,7 @@
-programa.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o
+
+
+programa.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o run_dir.sh
+#       ./run_dir.sh
 	gfortran -o programa.x init_pbc.o integrators.o module_calc_statistics.o module_forces.o main.o
 main.o: main.f90
 	gfortran -c -O3 main.f90
@@ -10,6 +13,12 @@ init_pbc.o: init_pbc.f90
 	gfortran -c -O3 init_pbc.f90
 module_forces.o: init_pbc.f90 module_forces.f90
 	gfortran -c -O3 module_forces.f90
+
+help:
+	@echo ---------------------------------------------------------------------
+	@echo make run: runs the program in order to obatain data
+	@echo make plot: generates plots of the energy, temperature and pressure.
+	@echo ---------------------------------------------------------------------
 
 clean:
 	rm -f integrators.o module_calc_statistics.o init_pbc.o module_forces.o main.o programa.x
