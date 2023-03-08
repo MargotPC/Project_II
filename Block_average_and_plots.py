@@ -3,9 +3,15 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
-#Asking the Number of points that take the system to equilibrium.
-start=input('Number of points that take the system to equilibrium :')
-start = int(start)
+#Reading the input file
+
+f = open('input.dat','r')
+content = f.read()
+lines = content.split('\n')
+for i in lines:
+    file_name= lines[1] 
+    start   = lines[2] 
+    start = int(start)
 
 
 # Definition of the block average function
@@ -61,7 +67,7 @@ def blockAverage(data, maxBlockSize=None):
 
 # Reading output file
 
-Raw_data = np.loadtxt('125_energy_0.800.dat',skiprows=1)
+Raw_data = np.loadtxt(file_name,skiprows=1)
 
 data = Raw_data.T
 
