@@ -3,6 +3,7 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
+
 #Reading the input file
 
 f = open('input.dat','r')
@@ -12,7 +13,6 @@ for i in lines:
     file_name= lines[1] 
     start   = lines[2] 
     start = int(start)
-
 
 # Definition of the block average function
 
@@ -67,7 +67,8 @@ def blockAverage(data, maxBlockSize=None):
 
 # Reading output file
 
-Raw_data = np.loadtxt(file_name,skiprows=1)
+
+Raw_data = np.loadtxt('results/'+file_name,skiprows=1)
 
 data = Raw_data.T
 
@@ -113,7 +114,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 # Put a legend to the right of the current axis
 # plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig(fname='energies.pdf',dpi=1000)
+plt.savefig(fname='plots/energies.pdf',dpi=1000)
 plt.clf()
 #plotting temperatures
 plt.plot(time[start:],temp[start:],label=f'Temp = {averages[3]:.4e} +/- {errors[3]:.4e} ')
@@ -126,7 +127,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 # Put a legend to the right of the current axis
 # plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig(fname='Temperature.pdf',dpi=1000)
+plt.savefig(fname='plots/Temperature.pdf',dpi=1000)
 plt.clf()
 
 # Plotting the momentum vs the time
@@ -140,7 +141,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 # Put a legend to the right of the current axis
 # plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig(fname='Momentum.pdf',dpi=1000)
+plt.savefig(fname='plots/Momentum.pdf',dpi=1000)
 plt.clf()
 
 # Plotting the momentum vs the time
@@ -154,7 +155,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 # Put a legend to the right of the current axis
 # plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig(fname='Pressure.pdf',dpi=1000)
+plt.savefig(fname='plots/Pressure.pdf',dpi=1000)
 plt.clf()
 
 		

@@ -1,5 +1,3 @@
-
-
 programa.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o run_dir.sh
 #       ./run_dir.sh
 	gfortran -o programa.x init_pbc.o integrators.o module_calc_statistics.o module_forces.o main.o
@@ -13,6 +11,10 @@ init_pbc.o: init_pbc.f90
 	gfortran -c -O3 init_pbc.f90
 module_forces.o: init_pbc.f90 module_forces.f90
 	gfortran -c -O3 module_forces.f90
+
+plot:
+
+	python Block_average_and_plots.py
 
 help:
 	@echo ---------------------------------------------------------------------
