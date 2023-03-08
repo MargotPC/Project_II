@@ -35,6 +35,7 @@ pb=.True. !pbc conditions are applied
 mass=40.d0 !in g/mol
 sig=3.4d0 !in Armstrongs
 density=0.8d0 !in m/sig^3
+L=(npar/density)**(1.d0/3.d0) !box length
 
 write(ext,fmt) density
 
@@ -65,7 +66,6 @@ sigma=sqrt(T1)
 
 steps=500000 !steps of the simulation
 limit=steps/5000 !write 5000 data
-L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
 cutoff2=cutoff*cutoff
 cutoff4=cutoff2*cutoff2
