@@ -62,3 +62,7 @@ Congratulations, you already have your molecular dynamics simulation!
 
 <a name="5-notes"></a>
 ## 5. Notes 
+The main code is gone in Fortran language, some compilater as gfortran is needed.
+The data analysis and data plotting use a python script. Numpy and Matplotlib modules are needed to running the code.
+
+
