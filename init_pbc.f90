@@ -44,7 +44,7 @@ subroutine init_scc(npart,dimn,l_box,pos,filename)
     write(10,"(i4)") npart
     write(10,*) ""
     do i = 1,npart
-        write(10,"(a3,f14.8,f14.8,f14.8)") 'A',pos(i,1), pos(i,2),pos(i,3)
+        write(10,"(a3,f14.8,f14.8,f14.8)") 'Xe',pos(i,1), pos(i,2),pos(i,3)
     end do
     close(10)
     return
