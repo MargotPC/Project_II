@@ -38,13 +38,31 @@ Collaborator: Elena Garcia de Lamo
 - [x] *Forces* - Module with a subroutine to calculate the interactions and forces of all particles in the system using the Lennard-Jones potential. *module_force.f90*
 - [x] *Inicialization+PBCs* - Module with subroutines for initialization of the system, simple cubic cell, and periodic boundary conditions of the box. *init_pbc.f90*.
 - [x] *Integrators* - Module with different integrators: Velocity Verlet, Verlet algorithm and Euler algorithm; also, Andersen thermostat. *integrators.f90*. 
-- [ ] *Data visualization* - Python program for visualization and data representation. Plots of macroscopic observables like kinetic energy, potential energy and total momentum.
+- [x] *Data visualization* - Python program for visualization and data representation. Plots of macroscopic observables like kinetic energy, potential energy and total momentum.
 
 <a name="3.2-para"></a>
 ### 3.2. Parallelized code 
 
 <a name="4-install"></a>
 ## 4. How to install 
+To install the codes and run the simulation, run the following commands in the terminal
+
+```shell
+>>> make 
+>>> make run
+```
+
+To plot the data and save the plots as pdf, use
+
+```shell
+>>> make plot
+```
+
+Congratulations, you already have your molecular dynamics simulation!
 
 <a name="5-notes"></a>
 ## 5. Notes 
+The main code is gone in Fortran language, some compilater as gfortran is needed.
+The data analysis and data plotting use a python script. Numpy and Matplotlib modules are needed to running the code.
+
+
