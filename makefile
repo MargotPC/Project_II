@@ -27,4 +27,3 @@ clean:
 	rm -f integrators.MOD module_calc_statistics.MOD init_pbc.MOD module_forces.MOD main.MOD
 run:
 	./programa.x 
-	./move_files.sh
