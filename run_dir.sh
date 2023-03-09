@@ -1,9 +1,10 @@
 #!/bin/bash
 
-dir1 = "results"
-dir2 = "plots"
+dir1="results"
+dir2="plots"
 
 # Check if the directories exist and create them if they don't
+
 if [ ! -d "$dir1" ]; then
   mkdir "$dir1"
 fi

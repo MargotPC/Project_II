@@ -140,7 +140,7 @@ subroutine calc_radial_dist_func(N, density, pos, gdR, distances_gdR, switch_cas
 !===================================
 
    ! ********** HOW TO IMPLEMENT THIS SUBROUTINE ************
-   ! Before the loop of time write tje following line for initialize the gdr
+   ! Before the loop of time write the following line for initialize the gdr
    !
    !    calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 1)
    !
