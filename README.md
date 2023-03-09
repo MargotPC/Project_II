@@ -46,10 +46,18 @@ Collaborator: Elena Garcia de Lamo
 <a name="4-install"></a>
 ## 4. How to install 
 To install the codes and run the simulation, run the following commands in the terminal
+
+```shell
 >>> make 
 >>> make run
+```
+
 To plot the data and save the plots as pdf, use
+
+```shell
 >>> make plot
+```
+
 Congratulations, you already have your molecular dynamics simulation!
 
 <a name="5-notes"></a>
