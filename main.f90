@@ -5,7 +5,7 @@ use init_pbc
 use module_forces
 use integrators
 use properties
-! use magnitudes
+
 
 implicit none
 
@@ -32,14 +32,13 @@ fmt='(f5.3)'
 M=5
 npar=M**3 !125 particles
 pb=.True. !pbc conditions are applied
-mass=131.293d0 !in g/mol (mass of Xenon)
+mass=40.d0 !in g/mol
 sig=3.4d0 !in Armstrongs
 density=0.8d0 !in m/sig^3
-L=(npar/density)**(1.d0/3.d0) !box length
 
 write(ext,fmt) density
 
-filename='initial_conf_'//trim(ext)//'_sc'
+filename='results/initial_conf_'//trim(ext)//'_sc'
 filename=trim(filename)
 
 allocate(pos(npar,3),lj_force(npar,3),vel(npar,3))
@@ -66,6 +65,7 @@ sigma=sqrt(T1)
 
 steps=500000 !steps of the simulation
 limit=steps/5000 !write 5000 data
+L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
 cutoff2=cutoff*cutoff
 cutoff4=cutoff2*cutoff2
@@ -77,8 +77,8 @@ cutoff12=cutoff6*cutoff6
 
 ! ext=trim(ext)
 
-open(100, file='125_dynamics_'//trim(ext)//'.xyz')
-open(101, file='125_energy_'//trim(ext)//'.dat')
+open(100, file='results/125_dynamics_'//trim(ext)//'.xyz')
+open(101, file='results/125_energy_'//trim(ext)//'.dat')
 
 
 ! ####################################################
@@ -92,11 +92,11 @@ write(*,'(x,A,x,f7.3)') 'Box length:',L
 write(*,*) 'Andersen Thermostat: ON'
 print*,''
 
-write(*,*) 'Output files generated:'
+write(*,*) 'Output files generated into /data:'
 write(*,'(8x,A)') '125_dynamics_'//trim(ext)//'.xyz'
 write(*,'(8x,A)') '125_energy_'//trim(ext)//'.dat'
-write(*,'(8x,A)') 'initial_vel.dat'
-write(*,'(8x,A)') 'final_vel.dat'
+! write(*,'(8x,A)') 'initial_vel.dat'
+! write(*,'(8x,A)') 'final_vel.dat'
 write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
 
 print*, ''
