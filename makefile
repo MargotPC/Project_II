@@ -24,6 +24,6 @@ help:
 
 clean:
 	rm -f integrators.o module_calc_statistics.o init_pbc.o module_forces.o main.o programa.x
-	rm -f integrators.MOD module_calc_statistics.MOD init_pbc.MOD module_forces.MOD main.MOD
+	rm -f integrators.mod module_calc_statistics.mod init_pbc.mod module_forces.mod main.mod
 run:
 	./programa.x 
