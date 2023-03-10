@@ -24,7 +24,7 @@ subroutine init_scc(npart,dimn,l_box,pos,filename)
     character(64) :: filename
     
     !initialization code
-    cells = nint(dble(npart)**(1d0/dble(dimn))) !unit cells in each dimension
+    cells = nint(dble(npart)**(1.d0/dble(dimn))) !unit cells in each dimension
     lat = l_box/dble(cells) !lattice spacing
     ncont=1 !matrix position counter 
     
