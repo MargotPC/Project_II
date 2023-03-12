@@ -125,66 +125,65 @@ end subroutine
 
 
 
-subroutine calc_radial_dist_func(N, density, pos, gdR, distances_gdR, switch_case)
+subroutine calc_radial_dist_func(N, density, nbins, pos, gdR, distances_gdR, switch_case)
 !====================================
 ! Calculate the radial distribution function
 !-----------------------------------
 !...INPUT...
 ! N - integer : number of particles of the system
 ! density - real*8 : density of the system
+! nbins - integer : number of points that calculate the gdR function
 ! pos -  real*8, dimension(N,3) : matrix that contains the actual positions of the system
 !
 !...OUTPUT...
 ! gdR - real, dimension(250) : array with the gdR values for each distance contained in the "distances_gdR"
 ! distances_gdR - real, dimension(250) : array with the distances of the gdR
 !===================================
-
-   ! ********** HOW TO IMPLEMENT THIS SUBROUTINE ************
-   ! Before the loop of time write the following line for initialize the gdr
-   !
-   !    calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 1)
-   !
-   ! In the loop of time the gdr has to be calculated for different times at the trajectory. It can be done in the 
-   ! conditional used for save data into an output file. The line will be
-   !
-   !    calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 2)
-   !
-   ! Once the time loop is over, the last part of the subroutine has to be implemented. Also in that part of the subroutine 
-   ! the writing into a file can be added (it is not implemented yet).
-   !
-   !     calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 3)
-   !
+! ********** HOW TO IMPLEMENT THIS SUBROUTINE ************
+! Before the loop of time write the following line for initialize the gdr
+!
+!    calc_radial_dist_func(N, density, nbins, pos, gdR,distances_gdR, 1)
+!
+! In the loop of time the gdr has to be calculated for different times at the trajectory. It can be done in the 
+! conditional used for save data into an output file. The line will be
+!
+!    calc_radial_dist_func(N, density, nbins, pos, gdR,distances_gdR, 2)
+!
+! Once the time loop is over, the last part of the subroutine has to be implemented. Also in that part of the subroutine 
+! the writing into a file can be added (it is not implemented yet).
+!
+!     calc_radial_dist_func(N, density, nbins, pos, gdR,distances_gdR, 3)
+!
 
 
 ! In and out variables
-integer, intent(in) :: N, switch_case
+integer, intent(in) :: N, switch_case, nbins
 real*8, intent(in) :: density
 real*8, dimension(:,:), intent(in) :: pos
-real*8, dimension(250), intent(inout) :: gdR
-real*8, dimension(250), intent(out) :: distances_gdR
+real*8, dimension(:), intent(inout) :: gdR
+real*8, dimension(:), intent(inout) :: distances_gdR
 ! parameters
-integer, parameter :: nbins = 250
 real*8, parameter :: pi = 4.d0*atan(1.d0)
 ! inner varables
 real*8 :: r, d, L, v
-integer :: i, j, A
+integer :: i, j, A, ind
 real*8, dimension(3) :: rij
 ! variables than need to be save in the memory
 real*8, save :: dr
-integer, save :: ngdr_calcul
+integer*8, save :: ngdr_calcul
 
 select case (switch_case)
    case(1)
       ! CASE 1 : INICIALIZATION
       ! The radial distribution function has to be averaged over all the times step; 
       ! therefore, before time starts the number of calculations of gdr is 0
-      ngdr_calcul=0 
+      ngdr_calcul = 0 
 
       ! Calculates the length of the system.
       L = (N/density)**(1.0/3.0)
 
 
-      dr= int(L/(2.d0*nbins)) ! Increments of the distance in the radial distribution function, 
+      dr= L/(2.d0*nbins) ! Increments of the distance in the radial distribution function, 
                               ! taking into account the number of bins (paramenter), dr,
                               ! and that only half of the box needs to be calculated (grater distances than L/2 would imply duplicity due to pbc).
 
@@ -192,25 +191,23 @@ select case (switch_case)
 
    case(2)
       ! CASE 2 : CALCULATION OF GDR EACH TIMESTEP
-      ngdr_calcul=ngdr_calcul+1 ! Every time than the subroutine is executed for switch_case=2 a calculation of gdr will procced.
+      ngdr_calcul = ngdr_calcul + 1 ! Every time than the subroutine is executed for switch_case=2 a calculation of gdr will procced.
                                 ! This way it is known how much calculations have been done, in order to promediate over time.
 
-      
       ! Computes the distance between the particle j and A.
       do A = 1,N-1
-         do j = A,N
-            rij(:)=(pos(j,:)-pos(A,:))
+         do j = A+1,N
+            rij(1) = (pos(A,1)-pos(j,1)); rij(2) = (pos(A,2)-pos(j,2)); rij(3) = (pos(A,3)-pos(j,3))
             call pbc(rij,L)
-            d = dsqrt(sum(rij(:)**2))
-            
+            d = sqrt((rij(1)**2)+(rij(2)**2)+(rij(3)**2))
             ! Counts the amount of particles that are between each distance r + dr.
             if (d .lt. L/2.d0) then
-               index = int(d/dr)
-               gdR(index) = gdR(index) + 2
+               ind = int(d/dr) + 1
+               gdR(ind) = gdR(ind) + 2.d0
             end if
          end do
       end do
-
+   
    case(3)
       ! CASE 3 : NORMALIZATION OF GDR. WRITING INTO A FILE CAN BE ADDED
       do i=1, nbins
@@ -221,7 +218,7 @@ select case (switch_case)
          ! Calculate the volume of the spherical shell with inner radius r-0.5dr=dr*i and outer radius r+0.5dr=dr(i+1)
          v=4.d0/3.d0*pi*((dr*(i+1))**3-(dr*i)**3)
          ! Calculates the radial distribution value for a certain distance.
-         gdR(i)=gdR(i)/(ngr*N*density*v)
+         gdR(i)=gdR(i)/(ngdr_calcul*N*density*v)
       end do
 
    end select

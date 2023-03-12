@@ -9,10 +9,10 @@ use properties
 
 implicit none
 
-integer M,npar,i,n,j,seed,steps,limit
+integer M,npar,i,n,j,seed,steps,limit,nbins
 real*8 :: density,cutoff,upot,cutoff4,cutoff6,cutoff12,cutoff2,L,dt,E,E_tot,mom,eps,mass,sig,msd
 real*8,allocatable, dimension(:,:) :: pos,lj_force,vel,initial_pos
-!real*8,allocatable, dimension(:) :: gdR, distances_gdR
+real*8,allocatable, dimension(:) :: gdR, distances_gdR
 character(64) :: filename
 character(8) :: fmt,ext
 integer,dimension(3) :: M_values
@@ -43,7 +43,6 @@ filename='results/initial_conf_'//trim(ext)//'_sc'
 filename=trim(filename)
 
 allocate(pos(npar,3),lj_force(npar,3),vel(npar,3),initial_pos(npar,3))
-!allocate(gdR(nbins=250), distances_gdR(nbins=250))
 
 ! ####################################################
 !                  INITIAL CONDITIONS
@@ -70,11 +69,12 @@ cutoff2=cutoff*cutoff
 cutoff4=cutoff2*cutoff2
 cutoff6=cutoff4*cutoff2
 cutoff12=cutoff6*cutoff6
-
+nbins = 250 ! Number of points calculated in the gdR function
+allocate(gdR(nbins), distances_gdR(nbins))
 
 call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
 ! call read_xyz(filename,npar,pos) !read the initial configuration from xyz file
-
+initial_pos = pos
 
 ! write(ext,fmt) dt
 
@@ -83,7 +83,7 @@ call init_scc(npar,3,L,pos,filename) !initial configuration could be generated i
 open(100, file='results/125_dynamics_'//trim(ext)//'.xyz')
 open(101, file='results/125_energy_'//trim(ext)//'.dat')
 open(102, file='results/125_msd_'//trim(ext)//'.dat')
-!open(103, file='results/125_gdr_'//trim(ext)//'.dat')
+open(103, file='results/125_gdr_'//trim(ext)//'.dat')
 
 
 ! ####################################################
@@ -104,7 +104,7 @@ write(*,'(8x,A)') '125_energy_'//trim(ext)//'.dat'
 ! write(*,'(8x,A)') 'final_vel.dat'
 write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
 write(*,'(8x,A)') '125_msd_'//trim(ext)//'.dat'
-!write(*,'(8x,A)') '125_gdr_'//trim(ext)//'.dat'
+write(*,'(8x,A)') '125_gdr_'//trim(ext)//'.dat'
 
 print*, ''
 write(*,*) '~~~~ STARTING MOLECULAR DYNAMICS ~~~~'
@@ -124,10 +124,8 @@ write(100,*) ''
 write(101,*) '# Density in g/cm^3:',density*mass/(6.022d0*1d23*(sig*1d-8)**3)
 write(102,*) 'time','#msd (Armstrongs)'
 
-initial_pos = pos
 
-!call calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 1)
-!write(103,*) gdR, distances_gdR
+call calc_radial_dist_func(npar, density, nbins, pos, gdR,distances_gdR, 1)
 
 T=T1
 do i=0,steps
@@ -172,7 +170,7 @@ do i=0,steps
         call LENNARD_JONNES_FORCES(pos, L, cutoff, npar, Upot, lj_force)
         call calc_pressure(npar,density,t_i,pos,lj_force,L,P)
         call calc_msd(npar,density,initial_pos,pos,msd)
-        !call calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 2)
+        call calc_radial_dist_func(npar, density, nbins, pos, gdR, distances_gdR, 2)
         
         E_tot=(E+Upot)*eps !so it is in kJ/mol
         t_i=eps*1d3/(6.022d0*1.380649d0)*t_i !so it is in K
@@ -182,7 +180,7 @@ do i=0,steps
 
         write(101,*) time,Upot*eps,E*eps,E_tot,t_i,mom,P
         write(102,*) time,msd
-        !write(103,*) gdR, distances_gdR
+
     endif
 
     if (mod(i,limit)==0) then
@@ -196,9 +194,12 @@ do i=0,steps
 
 enddo
 
-!call calc_radial_dist_func(N, density, pos, gdR,distances_gdR, 3)
-!write(103,*) gdR, distances_gdR
-
+call calc_radial_dist_func(npar, density, nbins, pos, gdR,distances_gdR, 3)
+write(103,*) "#gdR", "#distances"
+do i=0,nbins
+    write(103,*) gdR(i), distances_gdR(i)*sig*sig
+enddo
+    
 write(*,*) ""
 
 close(100)
