@@ -3,7 +3,6 @@ import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
-
 #Reading the input file
 
 f = open('input.dat','r')
@@ -11,8 +10,12 @@ content = f.read()
 lines = content.split('\n')
 for i in lines:
     file_name= lines[1] 
-    start   = lines[2] 
+    start   = lines[3] 
+    file_name2 = lines[2]
     start = int(start)
+
+
+
 
 # Definition of the block average function
 
@@ -67,16 +70,19 @@ def blockAverage(data, maxBlockSize=None):
 
 # Reading output file
 
+Raw_data = np.loadtxt(file_name,skiprows=1)
+Raw_data2 = np.loadtxt(file_name2,skiprows=1)
 
-Raw_data = np.loadtxt('results/'+file_name,skiprows=1)
 
 data = Raw_data.T
+data2=Raw_data2.T
 
-time,uener,kinener,etotal,temp,mom,press = data
+time,uener,kinener,etotal,temp,mom,press,RMSD = data
+gdr,dist=data2
 
 # Computing the averages from the data arrays
 
-data_entrance = ["Potential energy (KJ/mol)","Kinetic Energy (KJ/mol)" , "Total Energy (KJ/mol)" , "Temperature (K)" ,"Momentum (Kg · m /s)" , "Pressure (Pa)"]
+data_entrance = ["Potential energy (KJ/mol)","Kinetic Energy (KJ/mol)" , "Total Energy (KJ/mol)" , "Temperature (K)" ,"Momentum (Kg · m /s)" , "Pressure (Pa)", "RMSD($\AA$)"]
 # start = 932 # (Number of points that take the system to equilibrium) We should do that this variable should be an input !!!!
 averages , errors = [] , []
 
@@ -106,57 +112,61 @@ plt.plot(time[start:],uener[start:],label=f'Epot = {averages[0]:.4e} +/- {errors
 plt.plot(time[start:],kinener[start:],label=f'Ekin = {averages[1]:.4e} +/- {errors[1]:.4e}')
 plt.plot(time[start:],etotal[start:],label=f'Etotal = {averages[2]:.4e} +/- {errors[2]:.4e}')
 plt.ylabel('Energy (KJ/mol)')
-plt.xlabel('Time (s)')
+plt.xlabel('Time (ps)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-# Shrink current axis by 20%
 
-
-# Put a legend to the right of the current axis
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.savefig(fname='plots/energies.pdf',dpi=1000)
 plt.clf()
 #plotting temperatures
 plt.plot(time[start:],temp[start:],label=f'Temp = {averages[3]:.4e} +/- {errors[3]:.4e} ')
-plt.xlabel('Time (s)')
+plt.xlabel('Time (ps)')
 plt.ylabel('Temperature (K)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-# Shrink current axis by 20%
-
-
-# Put a legend to the right of the current axis
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig(fname='plots/Temperature.pdf',dpi=1000)
+plt.savefig(fname='Temperature.pdf',dpi=1000)
 plt.clf()
 
 # Plotting the momentum vs the time
 plt.plot(time[start:],mom[start:],label=f'Momentum = {averages[4]:.4e} +/- {errors[4]:.4e} ')
-plt.xlabel('Time (s)')
+plt.xlabel('Time (ps)')
 plt.ylabel('Momentum (Kg · m /s)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-# Shrink current axis by 20%
 
-
-# Put a legend to the right of the current axis
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.savefig(fname='plots/Momentum.pdf',dpi=1000)
 plt.clf()
 
 # Plotting the momentum vs the time
 plt.plot(time[start:],press[start:],label=f'Pressure = {averages[5]:.4e} +/- {errors[5]:.4e} ')
-plt.xlabel('Time (s)')
+plt.xlabel('Time (ps)')
 plt.ylabel('Pressure (Pa)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-# Shrink current axis by 20%
 
 
-# Put a legend to the right of the current axis
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.savefig(fname='plots/Pressure.pdf',dpi=1000)
 plt.clf()
 
-		
+
+plt.plot(time[start:],RMSD[start:],label=f'MSD = {averages[5]:.4e} +/- {errors[5]:.4e} ')
+plt.xlabel('Time (ps)')
+plt.ylabel('MSD ($\AA$)')
+plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
+
+
+
+plt.savefig(fname='plots/MSD.pdf',dpi=1000)
+plt.clf()
+
+#plotting gdr
+plt.plot(dist,gdr)
+plt.xlabel('Distance ($\AA$))')
+plt.ylabel('gdr ')
+
+
+plt.savefig(fname='plots/gdr.pdf',dpi=1000)
+plt.clf()
+
+
 		
