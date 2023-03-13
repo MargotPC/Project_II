@@ -111,9 +111,9 @@ L = (N/density)**(1.0/3.0)
 msd=0.0
 !Computes the distance between the position of the particle in the initial position and the actual position
 do i=1,N
-   rij(1) = (pos(i,1)-init_pos(i,1)); rij(2) = (pos(i,2)-init_pos(i,2)); rij(3) = (pos(i,3)-init_pos(i,3))
+   rij(:) = pos(i,:) - init_pos(i,:)
    call pbc(rij,L)
-   d2 = (rij(1)**2)+(rij(2)**2)+(rij(3)**2)
+   d2 = sum(rij(:)*rij(:))
 
    ! Calculates the mean square displacement
    msd = msd + d2
@@ -197,9 +197,9 @@ select case (switch_case)
       ! Computes the distance between the particle j and A.
       do A = 1,N-1
          do j = A+1,N
-            rij(1) = (pos(A,1)-pos(j,1)); rij(2) = (pos(A,2)-pos(j,2)); rij(3) = (pos(A,3)-pos(j,3))
+            rij(:) = pos(A,:)-pos(j,:)
             call pbc(rij,L)
-            d = sqrt((rij(1)**2)+(rij(2)**2)+(rij(3)**2))
+            d = sqrt(sum(rij(:)*rij(:)))
             ! Counts the amount of particles that are between each distance r + dr.
             if (d .lt. L/2.d0) then
                ind = int(d/dr) + 1

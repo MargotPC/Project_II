@@ -35,7 +35,7 @@ npar=M**3 !125 particles
 pb=.True. !pbc conditions are applied
 mass=40.d0 !in g/mol
 sig=3.4d0 !in Armstrongs
-density=0.8d0 !in m/sig^3
+density=1.2d0 !in m/sig^3
 
 write(ext,fmt) density
 
@@ -74,7 +74,7 @@ allocate(gdR(nbins), distances_gdR(nbins))
 
 call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
 ! call read_xyz(filename,npar,pos) !read the initial configuration from xyz file
-initial_pos = pos
+initial_pos = pos ! assign the initial positions to save it for the msd calculation
 
 ! write(ext,fmt) dt
 
@@ -82,9 +82,8 @@ initial_pos = pos
 
 open(100, file='results/125_dynamics_'//trim(ext)//'.xyz')
 open(101, file='results/125_energy_'//trim(ext)//'.dat')
-open(102, file='results/125_msd_'//trim(ext)//'.dat')
 open(103, file='results/125_gdr_'//trim(ext)//'.dat')
-
+open(102, file='input.dat')
 
 ! ####################################################
 !                       DINÀMICA
@@ -100,11 +99,16 @@ print*,''
 write(*,*) 'Output files generated into /data:'
 write(*,'(8x,A)') '125_dynamics_'//trim(ext)//'.xyz'
 write(*,'(8x,A)') '125_energy_'//trim(ext)//'.dat'
+write(102,'(A)') 'INPUT FILE'
+write(102,'(A)') 'results/125_energy_'//trim(ext)//'.dat'
 ! write(*,'(8x,A)') 'initial_vel.dat'
 ! write(*,'(8x,A)') 'final_vel.dat'
 write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
-write(*,'(8x,A)') '125_msd_'//trim(ext)//'.dat'
 write(*,'(8x,A)') '125_gdr_'//trim(ext)//'.dat'
+write(102,'(A)') 'results/125_gdr_'//trim(ext)//'.dat'
+write(102,'(A)') '1000'
+write(102,'(A)') ''
+write(102,'(A)') 'THIS INPUT FILE READS THE NAME OF THE OUTPUT FILES AND THE NUMBER OF STEPS NEEDED TO EQUILIBRATE THE SYSTEM'
 
 print*, ''
 write(*,*) '~~~~ STARTING MOLECULAR DYNAMICS ~~~~'
@@ -122,7 +126,6 @@ write(100,*) ''
 write(100,*) ''
 
 write(101,*) '# Density in g/cm^3:',density*mass/(6.022d0*1d23*(sig*1d-8)**3)
-write(102,*) 'time','#msd (Armstrongs)'
 
 
 call calc_radial_dist_func(npar, density, nbins, pos, gdR,distances_gdR, 1)
@@ -178,8 +181,7 @@ do i=0,steps
         time=sqrt(mass*1d-3/(eps*1d3))*sig*1d-10*i*dt*1d12 !so it is in ps
         msd=msd*sig*sig    !so it is in Armstrongs
 
-        write(101,*) time,Upot*eps,E*eps,E_tot,t_i,mom,P
-        write(102,*) time,msd
+        write(101,*) time,Upot*eps,E*eps,E_tot,t_i,mom,P,msd
 
     endif
 
@@ -204,7 +206,6 @@ write(*,*) ""
 
 close(100)
 close(101)
-close(102)
 close(103)
 
 ! Uncomment to write a file with the final velocities in order to do a distribution
