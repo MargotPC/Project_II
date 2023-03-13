@@ -11,7 +11,7 @@ lines = content.split('\n')
 for i in lines:
     file_name= lines[1] 
     start   = lines[3] 
-    file_name2= lines[2]
+    file_name2 = lines[2]
     start = int(start)
 
 
@@ -116,7 +116,7 @@ plt.xlabel('Time (ps)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 
-plt.savefig(fname='energies.pdf',dpi=1000)
+plt.savefig(fname='plots/energies.pdf',dpi=1000)
 plt.clf()
 #plotting temperatures
 plt.plot(time[start:],temp[start:],label=f'Temp = {averages[3]:.4e} +/- {errors[3]:.4e} ')
@@ -134,7 +134,7 @@ plt.ylabel('Momentum (Kg · m /s)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 
-plt.savefig(fname='Momentum.pdf',dpi=1000)
+plt.savefig(fname='plots/Momentum.pdf',dpi=1000)
 plt.clf()
 
 # Plotting the momentum vs the time
@@ -145,7 +145,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 
 
-plt.savefig(fname='Pressure.pdf',dpi=1000)
+plt.savefig(fname='plots/Pressure.pdf',dpi=1000)
 plt.clf()
 
 
@@ -156,7 +156,7 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 
 
-plt.savefig(fname='MSD.pdf',dpi=1000)
+plt.savefig(fname='plots/MSD.pdf',dpi=1000)
 plt.clf()
 
 #plotting gdr
@@ -165,7 +165,7 @@ plt.xlabel('Distance ($\AA$))')
 plt.ylabel('gdr ')
 
 
-plt.savefig(fname='gdr.pdf',dpi=1000)
+plt.savefig(fname='plots/gdr.pdf',dpi=1000)
 plt.clf()
 
 
