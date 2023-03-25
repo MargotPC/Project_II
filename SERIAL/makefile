@@ -3,7 +3,7 @@ FFLAGS = -O3
 
 
 program.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o
-#	./run_dir.sh
+	./run_dir.sh
 	$(FC) $(FFLAGS) -o $@ $^
 main.o: main.f90
 	$(FC) $(FFLAGS) -c $^
