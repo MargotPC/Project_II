@@ -3,10 +3,10 @@ FFLAGS = -O3
 
 
 program.x: init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o
-	./run_dir.sh
+#	./run_dir.sh
 	$(FC) $(FFLAGS) -o $@ $^
 main.o: main.f90
-	$(FC) $(FFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $^
 
 integrators.o: init_pbc.f90 integrators.f90
 	$(FC) $(FFLAGS) -c $^
@@ -29,4 +29,4 @@ help:
 clean:
 	rm -f *.o *.mod program.x
 run:
-	./program.x 
+	./program.x input.dat

@@ -23,6 +23,29 @@ logical pb
 seed=165432156
 call srand(seed)
 
+!Get the input from the input file
+call get_command_argument(1, filename)
+
+open(101,file=trim(filename))
+    read(101,*) ! INITIAL CONFIGURATION SC
+    read(101,*) M !size of the system (npar=M**3)
+    read(101,*) mass !in g/mol
+    read(101,*) sig !in Armstrongs (lj parameter)
+    read(101,*) eps !in J (lj parameter)
+    read(101,*) density !in m/sig^3
+
+    read(101,*) ! INITIAL CONDITIONS
+    read(101,*) vel !initial velocity of all the particles
+    read(101,*) nu !probability of accepting a change with thermal andersen
+    read(101,*) dt !timestep
+    read(101,*) T1 !initial temperature of the system so it is disordered
+    read(101,*) T2 !temperature around which the system will be equilibrated
+    read(101,*) steps !steps of the simulation
+
+    read(101,*) ! GDR
+    read(101,*) nbins ! Number of points calculated in the gdR function
+close(101)
+
 
 ! ####################################################
 !                INITIAL CONFIGURATION SC
@@ -30,12 +53,12 @@ call srand(seed)
 
 ! density=0.05d0
 fmt='(f5.3)'
-M=5
+! M=5
 npar=M**3 !125 particles
 pb=.True. !pbc conditions are applied
-mass=40.d0 !in g/mol
-sig=3.4d0 !in Armstrongs
-density=1.2d0 !in m/sig^3
+! mass=40.d0 !in g/mol
+! sig=3.4d0 !in Armstrongs
+! density=1.2d0 !in m/sig^3
 
 write(ext,fmt) density
 
@@ -49,19 +72,19 @@ allocate(pos(npar,3),lj_force(npar,3),vel(npar,3),initial_pos(npar,3))
 ! ####################################################
 
 fmt='(f6.4)'
-vel=0.d0 
-eps=0.998d0
+! vel=0.d0 
+! eps=0.998d0
 
-nu=0.1d0
-dt=1d-4
-T1=100.d0 !initial temperature of the system so it is disordered
-T2=1.2d0 !temperature around which the system will be equilibrated
+! nu=0.1d0
+! dt=1d-4
+! T1=100.d0 !initial temperature of the system so it is disordered
+! T2=1.2d0 !temperature around which the system will be equilibrated
 sigma=sqrt(T1)
 
 ! call bimodal(vel,sigma,npar)!set the initial velocities as a bimodal distribution
 
 
-steps=500000 !steps of the simulation
+! steps=500000 !steps of the simulation
 limit=steps/5000 !write 5000 data
 L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
@@ -69,7 +92,7 @@ cutoff2=cutoff*cutoff
 cutoff4=cutoff2*cutoff2
 cutoff6=cutoff4*cutoff2
 cutoff12=cutoff6*cutoff6
-nbins = 250 ! Number of points calculated in the gdR function
+! nbins = 250 ! Number of points calculated in the gdR function
 allocate(gdR(nbins), distances_gdR(nbins))
 
 call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
@@ -83,7 +106,7 @@ initial_pos = pos ! assign the initial positions to save it for the msd calculat
 open(100, file='results/125_dynamics_'//trim(ext)//'.xyz')
 open(101, file='results/125_energy_'//trim(ext)//'.dat')
 open(103, file='results/125_gdr_'//trim(ext)//'.dat')
-open(102, file='input.dat')
+open(102, file='get_input.dat')
 
 ! ####################################################
 !                       DINÀMICA
@@ -99,6 +122,7 @@ print*,''
 write(*,*) 'Output files generated into /data:'
 write(*,'(8x,A)') '125_dynamics_'//trim(ext)//'.xyz'
 write(*,'(8x,A)') '125_energy_'//trim(ext)//'.dat'
+write(*,'(8x,A)') 'get_input.dat'
 write(102,'(A)') 'INPUT FILE'
 write(102,'(A)') 'results/125_energy_'//trim(ext)//'.dat'
 ! write(*,'(8x,A)') 'initial_vel.dat'
