@@ -1,0 +1,38 @@
+#/bin/csh
+# Basic parameters: job name, parallel environment and cores, queue, used shell, 
+# # current working directory,output files (.err, .out), email.
+#$ -N compilation
+#$ -pe smp 1
+#$ -q iqtc07.q
+#$ -S /bin/csh
+#$ -cwd
+#$ -o  compilation.out
+#$ -e  compilation.err
+# Remove the first '#' of the following 2 lines if you want to receive an email when the job ends.
+#$ -m e 
+##$ -M  
+
+# Load the modules needed
+module load  openmpi/1.8.8_ics-2015.0
+
+# Run the job
+
+set dir1 = "results"
+set dir2 = "plots"
+
+# Check if the directories exist and create them if they don't
+
+if (! -d "$dir1") then
+  mkdir "$dir1"
+endif
+
+if (! -d "$dir2") then
+  mkdir "$dir2"
+endif
+
+mpif90 -O3 -c init_pbc.f90
+mpif90 -O3 -c module_calc_statistics.f90 
+mpif90 -O3 -c module_forces.f90
+mpif90 -O3 -c integrators_parallel.f90
+mpif90 -O3 -c main.f90 
+mpif90 -O3 -o program.x init_pbc.o module_calc_statistics.o module_forces.o integrators_parallel.o main.o
