@@ -18,6 +18,8 @@ To execute the program in your machine use `make` to compile the code and then u
 
 Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.dat` file. Notice that a file named `get_input.dat` is also generated but it is an input file for the ploting code and should not be changed if you want to plot the last generated data.
 
+Use `make help` to get aditional information about the options of the make file.
+
 
 ### RESULTS
 After running your simulation with the default input file your `/results` directory should contain the following files:
