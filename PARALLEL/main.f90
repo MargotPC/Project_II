@@ -3,7 +3,7 @@ program Molecular_dynamics
 use iso_c_binding
 use init_pbc
 use module_forces
-use integrators
+use integrators_parallel
 use properties
 use mpi
 
@@ -19,6 +19,7 @@ character(8) :: fmt,ext
 integer,dimension(3) :: M_values
 real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2
 logical pb
+integer :: myid,comm,ierr,nprocs
 
 ! Initialize MPI
 call MPI_Init(ierr)
@@ -179,7 +180,7 @@ do i=0,steps
     !     sigma=sqrt(2.d0)
     ! endif
     
-    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff) !activate use verlet steps
+    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff,comm,nprocs,myid) !activate use verlet steps
     ! call time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel) !activate to use euler steps
     call therm_Andersen(vel,nu,sigma,npar) !activate to add a thermostat
 
