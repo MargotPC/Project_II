@@ -1,18 +1,21 @@
-# Project_II
+# Project II
+
+This repository contains all the necessary codes to perform a molecular dynamics simulation of a Xe gas at a given temperature starting from a disordered simple cubic structure. The simulation can be ran in serial or in parallel.
 
 ## Table Contents
 
-1. [ List of team members ](#1-team)
-2. [ Task distribution ](#2-task)
-3. [ To-do list ](#3-list)
-   1. [ Initial steps: molecular dynamics code ](#3.1-init)
-   2. [ Parallelized code ](#3.2-para)
-4. [ How to install ](#4-install)
-5. [ Notes: about the use of special modules and other stuff ](#5-notes)
+1. [ CONTAINS ](#1-contains)
+2. [ TEAM MEMBERS](#2-team)
+3. [ NOTES](#3-notes)
 
+<a name="1-contains"></a>
+## 1. CONTAINS
 
-<a name="1-team"></a>
-## 1. Team members 
+1. `/SERIAL`: Directory containing all the necessary files and codes to perform the simulation in serial, along with the graphical representation of the evolution of some thermodynamical properties, the MSD and GDR. 
+2. `/PARALLEL`: Directory containing all the necessary files and codes to perform the simulation in parallel (using MPI), along with the graphical representation of the evolution of some thermodynamical properties, the MSD and GDR.
+
+<a name="2-team"></a>
+## 2. TEAM MEMBERS
 
 * ARNAU GARCÍA DURAN
 * *ALBERT ORTEGA BARTOLOMÉ* (TEAM LEADER)
@@ -21,48 +24,7 @@
 
 Collaborator: Elena Garcia de Lamo
 
- <a name="2-task"></a>
-## 2. Reminded: task distribution
+<a name="3-notes"></a>
+## 3. NOTES
 
-* Inicialization+PBCs --> Margot
-* Forces+data visualization --> Arnau Cortés
-* Integrators --> Albert
-* Stadistics --> Arnau Garcia
-
-<a name="3-list"></a>
-## 3. To-do list 
-
-<a name="3.1-init"></a>
-### 3.1. Initial steps: molecular dynamics code 
-- [x] *Stadistics* - Module with subroutines for calculation of macroscopic observables: kinetic energy, total momentum, instantaneous temperature, pressure, mean square displacement and radial distribution function. *module_calc_statistics.f90*.
-- [x] *Forces* - Module with a subroutine to calculate the interactions and forces of all particles in the system using the Lennard-Jones potential. *module_force.f90*
-- [x] *Inicialization+PBCs* - Module with subroutines for initialization of the system, simple cubic cell, and periodic boundary conditions of the box. *init_pbc.f90*.
-- [x] *Integrators* - Module with different integrators: Velocity Verlet, Verlet algorithm and Euler algorithm; also, Andersen thermostat. *integrators.f90*. 
-- [x] *Data visualization* - Python program for visualization and data representation. Plots of macroscopic observables like kinetic energy, potential energy and total momentum.
-
-<a name="3.2-para"></a>
-### 3.2. Parallelized code 
-
-<a name="4-install"></a>
-## 4. How to install 
-To install the codes and run the simulation, run the following commands in the terminal
-
-```shell
->>> make 
->>> make run
-```
-
-To plot the data and save the plots as pdf, use
-
-```shell
->>> make plot
-```
-
-Congratulations, you already have your molecular dynamics simulation!
-
-<a name="5-notes"></a>
-## 5. Notes 
-The main code is done in Fortran language, some compiler as gfortran is needed.
-The data analysis and data plotting use a python script. Numpy and Matplotlib modules are needed to running the code.
-
-
+If some change may be made in any of the codes provided we would deeply aprecciate if the `CODE_FORMAT.txt`, which contains some general guidelines of the code format applied, is used as a guide to make it easier to contemplate the requested changes.
