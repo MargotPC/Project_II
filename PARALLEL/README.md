@@ -23,6 +23,8 @@ In order to visualize the trajectories of the simulation as well as the initial 
 <a name="2-ex"></a>
 ### EXECUTION
 
+When executing the code in a cluster, use the `Makefile` in order to perform your desired actions. First of all is necessary to compile the code in the cluster. This can be done using the `make compile` command on the cluster terminal. To run the code simply use `make run` on the cluster terminal. Notice that the default settings use only 4 cores but this can be changed in the `run.sub` file modifying the `#$ -pe smp` option.
+
 EXPLICAR LA EXECUTION DEL CODI PARALLEL
 
 Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.dat` file. Notice that a file named `get_input.dat` is also generated but it is an input file for the ploting code and should not be changed if you want to plot the last generated data.
