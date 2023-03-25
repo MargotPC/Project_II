@@ -10,4 +10,17 @@ All codes used for the simulation have been created using _Fortran 90_. The visu
 
 ### EXECUTION
 
-To execute the program in your machine use `make` to compile the code and then use `make run` to start the simulation. Notice that  
+To execute the program in your machine use `make` to compile the code and then use `make run` to start the simulation. If you want to plot your results, use `make plot` after you have runned your simulation. Notice that when you run the code the directories `/results` and `/plots` are automatically generated. As they names say, all the results generated from the simulation will go to the directory `/results` while all plots will go to `/plots`. 
+
+
+
+
+### RESULTS
+After running your simulation your `/results` directory should look like this:
+
+```Markdown
+
+125_dynamics_0.800
+
+```
+
