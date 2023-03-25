@@ -10,17 +10,17 @@ All codes used for the simulation have been created using _Fortran 90_. The visu
 
 ### EXECUTION
 
-To execute the program in your machine use `make` to compile the code and then use `make run` to start the simulation. If you want to plot your results, use `make plot` after you have runned your simulation. Notice that when you run the code the directories `/results` and `/plots` are automatically generated. As they names say, all the results generated from the simulation will go to the directory `/results` while all plots will go to `/plots`. 
+To execute the program in your machine use `make` to compile the code and then use `make run` to start the simulation. If you want to plot your results, use `make plot` after you have runned your simulation. Notice that when you run the code the directories `/results` and `/plots` are automatically generated. As their names say, all the results generated from the simulation will go to the directory `/results` while all plots will go to `/plots`. 
 
-
+Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.dat` file. Notice that a file named `get_input.dat` is also generated but it is an imput file for the ploting code and should not be changed if you want to plot the last generated data.
 
 
 ### RESULTS
-After running your simulation your `/results` directory should look like this:
+After running your simulation your `/results` directory should contain the following files:
 
 ```Markdown
 
-125_dynamics_0.800
+125_dynamics_0.800.dat
 
 ```
 
