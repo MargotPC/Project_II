@@ -37,6 +37,6 @@ initial_conf_0.800.xyz    (Contains the frame of the starting configuration)
 
 Notice that the files start with the number of particles of the system $M^3$ (125) and end with the value of the `density` (0.800) of the `input.dat` file respectively. 
 
-After running `Block_average_and_plots.py`, the `/plots` directory may contain all the plots required. It is important that the `results` directory contains all the specified files!
+After running `Block_average_and_plots.py`, the `/plots` directory may contain all the plots required. It is important that the `/results` directory contains all the specified files!
 
 
