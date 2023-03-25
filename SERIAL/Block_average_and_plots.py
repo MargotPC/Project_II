@@ -98,7 +98,7 @@ for i ,xi in enumerate(data[1:]) :  #for each array of data avoiding time
 	# print results 
 	print(f"Average : <{data_entrance[i]}> = {mean_val:15.5e} +/- {std:.5e} ")
 
-with open("final_results.dat","w") as outFile :
+with open("results/thermo_prop.dat","w") as outFile :
 	outFile.write("# Mean values and errors for the studied thermodynamic properties.\n")
 	for i,label in enumerate(data_entrance):
 		outFile.write(f"{label:>15} {averages[i]} +/- {errors[i]} \n")
