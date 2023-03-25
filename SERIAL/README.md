@@ -33,7 +33,7 @@ After running your simulation with the default input file your `/results` direct
 
 ```Markdown
 
-125_dynamics_0.800.xyz    (Dynamics of the simulation)
+125_dynamics_0.800.xyz    (contains the frames of the simulation in .xyz format)
 125_energy_0.800.dat      (Contains in this order time,potential energy,kinetic energy,total energy,instant temperature,momentum,pressure and msd of every frame)
 125_gdr_0.800.dat         (Contains the GDR and distances)
 125_msd_0.800.dat         (Contains time and MSD)
