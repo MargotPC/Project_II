@@ -51,15 +51,9 @@ close(101)
 !                INITIAL CONFIGURATION SC
 ! ####################################################
 
-! density=0.05d0
 fmt='(f5.3)'
-! M=5
 npar=M**3 !125 particles
 pb=.True. !pbc conditions are applied
-! mass=40.d0 !in g/mol
-! sig=3.4d0 !in Armstrongs
-! density=1.2d0 !in m/sig^3
-
 write(ext,fmt) density
 
 filename='results/initial_conf_'//trim(ext)//'_sc'
@@ -72,19 +66,11 @@ allocate(pos(npar,3),lj_force(npar,3),vel(npar,3),initial_pos(npar,3))
 ! ####################################################
 
 fmt='(f6.4)'
-! vel=0.d0 
-! eps=0.998d0
 
-! nu=0.1d0
-! dt=1d-4
-! T1=100.d0 !initial temperature of the system so it is disordered
-! T2=1.2d0 !temperature around which the system will be equilibrated
 sigma=sqrt(T1)
 
 ! call bimodal(vel,sigma,npar)!set the initial velocities as a bimodal distribution
 
-
-! steps=500000 !steps of the simulation
 limit=steps/5000 !write 5000 data
 L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
@@ -92,7 +78,6 @@ cutoff2=cutoff*cutoff
 cutoff4=cutoff2*cutoff2
 cutoff6=cutoff4*cutoff2
 cutoff12=cutoff6*cutoff6
-! nbins = 250 ! Number of points calculated in the gdR function
 allocate(gdR(nbins), distances_gdR(nbins))
 
 call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
@@ -183,10 +168,7 @@ do i=0,steps
     ! call time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel) !activate to use euler steps
     call therm_Andersen(vel,nu,sigma,npar) !activate to add a thermostat
 
-    call pbc2(pos,L,npar)
-
-
-
+    call pbc(pos,L,npar)
 
     if (mod(i,limit)==0) then
 
