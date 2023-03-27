@@ -2,13 +2,13 @@
 # environment variables can be set using -v with a comma-separated list of variables.
 # Basic parameters: job name, parallel environment and cores, queue, used shell, 
 # # current working directory,output files (.err, .out), email.
-#$ -N run simulation
+#$ -N prime_iq7
 #$ -pe smp 4          #  --> $NSLOTS
 #$ -q iqtc07.q
 #$ -S /bin/csh
 #$ -cwd
-#$ -o  simulation.out
-#$ -e  simulation.err
+#$ -o  run.out
+#$ -e  run.err
 # Remove the first '#' of the following 2 lines if you want to receive an email when the job ends.
 #$ -m e 
 ##$ -M  
