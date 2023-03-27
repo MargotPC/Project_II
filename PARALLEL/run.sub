@@ -20,4 +20,4 @@ module load  openmpi/1.8.8_ics-2015.0
 # Run the job
 
 
-mpirun -np $NSLOTS ./program.x input.dat  
+mpirun -np $NSLOTS ./program.x input.mdp  
