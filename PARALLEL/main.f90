@@ -184,10 +184,7 @@ do i=0,steps
     ! call time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel) !activate to use euler steps
     call therm_Andersen(vel,nu,sigma,npar) !activate to add a thermostat
 
-    call pbc2(pos,L,npar)
-
-
-
+    call pbc(pos,L,npar)
 
     if (mod(i,limit)==0) then
 

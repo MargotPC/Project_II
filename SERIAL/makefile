@@ -29,4 +29,4 @@ help:
 clean:
 	rm -f *.o *.mod program.x
 run:
-	./program.x input.dat
+	./program.x input.mdp

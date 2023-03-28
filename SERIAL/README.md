@@ -23,7 +23,7 @@ In order to visualize the trajectories of the simulation as well as the initial 
 
 To execute the program in your machine use `make` to compile the code and then use `make run` to start the simulation. If you want to plot your results, use `make plot` after you have runned your simulation. This will save all the plots in `.pdf` format. Notice that when you run the code the directories `/results` and `/plots` are automatically generated. As their names say, all the results generated from the simulation will go to the directory `/results` while all plots will go to `/plots`. 
 
-Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.dat` file. Notice that a file named `get_input.dat` is also generated but it is an input file for the ploting code and should not be changed if you want to plot the last generated data.
+Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.mdp` file. Notice that a file named `get_input.dat` is also generated but it is an input file for the ploting code and should not be changed if you want to plot the last generated data.
 
 Use `make help` to get aditional information about the options of the make file.
 
