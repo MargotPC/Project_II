@@ -3,7 +3,7 @@
 40.d0        !mass --> mass of the atoms of the system in g/mol
 3.4d0        !sig --> in Armstrongs (lj parameter)
 0.998d0      !eps --> in J (lj parameter)
-1.2d0        !density --> density of the system in m/sig^3
+0.8d0        !density --> density of the system in m/sig^3
 !!!!!!!!!!!!! INITIAL CONDITIONS !!!!!!!!!!!!!!!!!!!!!!
 0.d0         !vel --> initial velocity of all the particles
 0.1d0        !nu --> probability of accepting a change with thermal andersen
