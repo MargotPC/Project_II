@@ -3,33 +3,109 @@ program Molecular_dynamics
 use iso_c_binding
 use init_pbc
 use module_forces
-use integrators_parallel
+use integrators
 use properties
 use mpi
 
 
 implicit none
 
-integer M,npar,i,n,j,seed,steps,limit,nbins
+integer M,npar,i,n,j,seed,steps,limit,nbins,h,min,sec
 real*8 :: density,cutoff,upot,cutoff4,cutoff6,cutoff12,cutoff2,L,dt,E,E_tot,mom,eps,mass,sig,msd
 real*8,allocatable, dimension(:,:) :: pos,lj_force,vel,initial_pos
 real*8,allocatable, dimension(:) :: gdR, distances_gdR
 character(64) :: filename
 character(8) :: fmt,ext
 integer,dimension(3) :: M_values
-real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2
+real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2,time1,time2
 logical pb
-integer :: myid,comm,ierr,nprocs
-
-! Initialize MPI
-call MPI_Init(ierr)
-comm = MPI_COMM_WORLD
-call MPI_Comm_rank(comm, myid, ierr)
-call MPI_Comm_size(comm, nprocs, ierr)
+integer :: myid,comm,ierr,nprocs,ii,part_per_worker,pair_per_worker,rest1,rest2
+integer, allocatable, dimension(:,:) :: pairs,particles,pairindex
+integer, allocatable, dimension(:) :: displs, counts, seeds, sizes
 
 
-seed=165432156
-call srand(seed)
+! ###########################
+! INTIALIZE MPI ENVIRONMENT
+! ###########################
+
+call MPI_INIT(ierr)
+call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
+call MPI_COMM_SIZE(MPI_COMM_WORLD,nprocs,ierr)
+
+! Start computing the CPU time
+if (myid.eq.0) then
+    call CPU_time(time1)
+endif
+
+
+!initialisation of a random seed for each processor
+call random_seed(size = nprocs) 
+allocate(seeds(nprocs))
+call random_seed(get=seeds)
+
+
+!Define vector of pairs of particles (for the force and gdr subroutines)
+
+allocate(pairindex((npar*(npar-1))/2,2))
+ii = 1
+do i = 1,npar-1
+    do j = i+1,npar
+        pairindex(ii,:) = (/i,j/)
+        ii = ii + 1
+    enddo
+enddo
+
+
+!Define the division of information per worker. Pairs contains the pairs that each worker has to evaluate while particles contains the particles.
+!if it is not divisible, the partition is done as equitative as possible:
+!         EXAMPLE: nprocs = 4 while npar = 35             
+!                  part_per_worker = 8 --> partition would be (9:9:9:8)
+     
+
+allocate(particles(0:nprocs-1,2)) !starting from 0 since the workers ids go from 0 to nprocs-1
+allocate(pairs(0:nprocs-1,2))
+allocate(displs(nprocs), counts(nprocs), sizes(0:nprocs-1)) ! prepareing vectors for the integrator
+
+part_per_worker = npar/nprocs
+pair_per_worker = (npar*(npar-1)/2)/nprocs
+
+rest1 = mod(npar,nprocs)
+rest2 = mod(npar*(npar-1)/2,nprocs)
+
+do i = 0, nprocs-1
+    if (rest1.gt.0) then
+        particles(i,1) = i*(part_per_worker+1)+1
+        particles(i,2) = (i+1)*(part_per_worker+1)
+        displs(i+1) = i*3*(part_per_worker+1)
+        counts(i+1) = 3*(part_per_worker+1)
+        sizes(i) = (part_per_worker+1)
+        rest1 = rest1 - 1
+    else
+        particles(i,1) = i*part_per_worker+1
+        particles(i,2) = (i+1)*part_per_worker
+        displs(i+1) = i*3*(part_per_worker)
+        counts(i+1) = 3*(part_per_worker)
+        sizes(i) = (part_per_worker)
+    endif
+
+
+    if (rest2.gt.0) then
+        pairs(i,1) = i*(pair_per_worker+1)+1
+        pairs(i,2) = (i+1)*(pair_per_worker+1)
+        rest2 = rest2 - 1
+    else
+        pairs(i,1) = i*pair_per_worker+1
+        pairs(i,2) = (i+1)*pair_per_worker
+    endif
+        
+enddo
+
+
+! ####################################
+!         START MAIN PROGRAM
+! ####################################
+
+
 
 !Get the input from the input file
 call get_command_argument(1, filename)
@@ -180,11 +256,11 @@ do i=0,steps
     !     sigma=sqrt(2.d0)
     ! endif
     
-    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff,comm,nprocs,myid) !activate use verlet steps
+    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff,nprocs,myid,displs,counts,sizes) !activate use verlet steps
     ! call time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel) !activate to use euler steps
     call therm_Andersen(vel,nu,sigma,npar) !activate to add a thermostat
 
-    call pbc(pos,L,npar)
+    call pbc(pos,L)
 
     if (mod(i,limit)==0) then
 
@@ -209,16 +285,18 @@ do i=0,steps
 
     endif
 
-    if ((mod(i,limit)==0).and.(myid.eq.0)) then
-
-        ! write(*,'(I6,2x,A,1x,I6)',advance='no') i,'out of',steps
-        ! write(*,'(A)',advance='no') repeat(c_backspace,100)
-
-        call progress_bar(i,steps)
-        
-    endif
-
 enddo
+
+if (myid.eq.0) then
+
+    call CPU_time(time2)
+
+    h=int((t2-t1)/3600.d0)
+    min=int((t2-t1)/60.d0-60.d0*dble(h))
+    sec=(t2-t1)-h*3600-min*60
+
+    write(*,*) 'TIME: ',h,'h ',min,'m ',sec,'s'
+endif
 
 call calc_radial_dist_func(npar, density, nbins, pos, gdR,distances_gdR, 3)
 
