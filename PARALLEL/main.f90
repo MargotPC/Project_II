@@ -62,12 +62,9 @@ if (myid.eq.0) then
     call CPU_time(time1)
 endif
 
-
 !initialisation of a random seed for each processor
-call random_seed(size = nprocs) 
 allocate(seeds(nprocs))
 call random_seed(get=seeds)
-
 
 !Define vector of pairs of particles (for the force and gdr subroutines)
 
@@ -122,10 +119,9 @@ do i = 0, nprocs-1
         pairs(i,1) = i*pair_per_worker+1
         pairs(i,2) = (i+1)*pair_per_worker
     endif
-        
 enddo
 
-
+print*, nprocs
 ! ####################################
 !         START MAIN PROGRAM
 ! ####################################
@@ -291,9 +287,9 @@ if (myid.eq.0) then
 
     call CPU_time(time2)
 
-    h=int((t2-t1)/3600.d0)
-    min=int((t2-t1)/60.d0-60.d0*dble(h))
-    sec=(t2-t1)-h*3600-min*60
+    h=int((time2-time1)/3600.d0)
+    min=int((time2-time1)/60.d0-60.d0*dble(h))
+    sec=(time2-time1)-h*3600-min*60
 
     write(*,*) 'TIME: ',h,'h ',min,'m ',sec,'s'
 endif
