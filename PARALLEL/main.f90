@@ -10,7 +10,7 @@ use mpi
 
 implicit none
 
-integer M,npar,i,n,j,seed,steps,limit,nbins,h,min,sec
+integer :: M,npar,i,n,j,seed,steps,limit,nbins,h,min,sec
 real*8 :: density,cutoff,upot,cutoff4,cutoff6,cutoff12,cutoff2,L,dt,E,E_tot,mom,eps,mass,sig,msd
 real*8,allocatable, dimension(:,:) :: pos,lj_force,vel,initial_pos
 real*8,allocatable, dimension(:) :: gdR, distances_gdR
@@ -22,6 +22,31 @@ logical pb
 integer :: myid,comm,ierr,nprocs,ii,part_per_worker,pair_per_worker,rest1,rest2
 integer, allocatable, dimension(:,:) :: pairs,particles,pairindex
 integer, allocatable, dimension(:) :: displs, counts, seeds, sizes
+
+!Get the input from the input file
+call get_command_argument(1, filename)
+
+open(101,file=trim(filename))
+    read(101,*) ! INITIAL CONFIGURATION SC
+    read(101,*) M !size of the system (npar=M**3)
+    read(101,*) mass !in g/mol
+    read(101,*) sig !in Armstrongs (lj parameter)
+    read(101,*) eps !in J (lj parameter)
+    read(101,*) density !in m/sig^3
+
+    read(101,*) ! INITIAL CONDITIONS
+    read(101,*) vel !initial velocity of all the particles
+    read(101,*) nu !probability of accepting a change with thermal andersen
+    read(101,*) dt !timestep
+    read(101,*) T1 !initial temperature of the system so it is disordered
+    read(101,*) T2 !temperature around which the system will be equilibrated
+    read(101,*) steps !steps of the simulation
+
+    read(101,*) ! GDR
+    read(101,*) nbins ! Number of points calculated in the gdR function
+close(101)
+
+npar=M**3 ! particles
 
 
 ! ###########################
@@ -106,31 +131,6 @@ enddo
 ! ####################################
 
 
-
-!Get the input from the input file
-call get_command_argument(1, filename)
-
-open(101,file=trim(filename))
-    read(101,*) ! INITIAL CONFIGURATION SC
-    read(101,*) M !size of the system (npar=M**3)
-    read(101,*) mass !in g/mol
-    read(101,*) sig !in Armstrongs (lj parameter)
-    read(101,*) eps !in J (lj parameter)
-    read(101,*) density !in m/sig^3
-
-    read(101,*) ! INITIAL CONDITIONS
-    read(101,*) vel !initial velocity of all the particles
-    read(101,*) nu !probability of accepting a change with thermal andersen
-    read(101,*) dt !timestep
-    read(101,*) T1 !initial temperature of the system so it is disordered
-    read(101,*) T2 !temperature around which the system will be equilibrated
-    read(101,*) steps !steps of the simulation
-
-    read(101,*) ! GDR
-    read(101,*) nbins ! Number of points calculated in the gdR function
-close(101)
-
-
 ! ####################################################
 !                INITIAL CONFIGURATION SC
 ! ####################################################
@@ -138,7 +138,7 @@ close(101)
 
 fmt='(f5.3)'
 
-npar=M**3 ! particles
+
 pb=.True. !pbc conditions are applied
 
 write(ext,fmt) density
@@ -256,7 +256,7 @@ do i=0,steps
     !     sigma=sqrt(2.d0)
     ! endif
     
-    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff,nprocs,myid,displs,counts,sizes) !activate use verlet steps
+    call time_step_v_verlet(pos,vel,L,dt,npar,cutoff,nprocs,myid,displs,counts,sizes,particles) !activate use verlet steps
     ! call time_step_Euler_pbc(pos,L,dt,npar,cutoff,vel) !activate to use euler steps
     call therm_Andersen(vel,nu,sigma,npar) !activate to add a thermostat
 
