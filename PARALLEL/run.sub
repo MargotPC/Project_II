@@ -2,7 +2,7 @@
 # environment variables can be set using -v with a comma-separated list of variables.
 # Basic parameters: job name, parallel environment and cores, queue, used shell, 
 # # current working directory,output files (.err, .out), email.
-#$ -N prime_iq7
+#$ -N MC_dynamics
 #$ -pe smp 4          #  --> $NSLOTS
 #$ -q iqtc07.q
 #$ -S /bin/csh
