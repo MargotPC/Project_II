@@ -17,8 +17,7 @@ character(64) :: filename
 character(8) :: fmt,ext
 integer,dimension(3) :: M_values
 real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2
-logical pb
-
+real*8 :: utime,utemp,upress,udens
 
 seed=165432156
 call srand(seed)
@@ -51,13 +50,23 @@ close(101)
 !                INITIAL CONFIGURATION SC
 ! ####################################################
 
-fmt='(f5.3)'
-npar=M**3 !125 particles
-pb=.True. !pbc conditions are applied
-write(ext,fmt) density
+npar=M**3 ! particles
 
-filename='results/initial_conf_'//trim(ext)//'_sc'
-filename=trim(filename)
+
+fmt='(f5.3)'
+
+write(ext,fmt) density
+write(ext2,'(I6)') npar
+ext2 = adjustl(ext2)
+ext = adjustl(ext)
+
+call All_reduce(eps,mass,sig,utime,utemp,upress,udens)
+
+!Reduced units for all inputs:
+
+density = density/udens
+T1 = T1/utemp
+T2 = T2/utemp
 
 allocate(pos(npar,3),lj_force(npar,3),vel(npar,3),initial_pos(npar,3))
 
@@ -66,7 +75,6 @@ allocate(pos(npar,3),lj_force(npar,3),vel(npar,3),initial_pos(npar,3))
 ! ####################################################
 
 fmt='(f6.4)'
-
 sigma=sqrt(T1)
 
 ! call bimodal(vel,sigma,npar)!set the initial velocities as a bimodal distribution
@@ -74,10 +82,6 @@ sigma=sqrt(T1)
 limit=steps/5000 !write 5000 data
 L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
-cutoff2=cutoff*cutoff
-cutoff4=cutoff2*cutoff2
-cutoff6=cutoff4*cutoff2
-cutoff12=cutoff6*cutoff6
 allocate(gdR(nbins), distances_gdR(nbins))
 
 call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
@@ -88,9 +92,9 @@ initial_pos = pos ! assign the initial positions to save it for the msd calculat
 
 ! ext=trim(ext)
 
-open(100, file='results/125_dynamics_'//trim(ext)//'.xyz')
-open(101, file='results/125_energy_'//trim(ext)//'.dat')
-open(103, file='results/125_gdr_'//trim(ext)//'.dat')
+open(100, file='results/'//trim(ext2)//'_dynamics_'//trim(ext)//'.xyz')
+open(101, file='results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat')
+open(103, file='results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat')
 open(102, file='get_input.dat')
 
 ! ####################################################
@@ -98,23 +102,23 @@ open(102, file='get_input.dat')
 ! ####################################################
 write(*,*)''
 write(*,'(x,A,x,I3)') 'Number of particles:', npar
-write(*,'(x,A,x,f7.3)') 'Density of the system:',density
-write(*,'(x,A,x,f7.3,A,x,f7.3)') 'Thermostat temperature:',T1,' --->',T2 
+write(*,'(x,A,x,f7.3)') 'Density of the system:',density*udens
+write(*,'(x,A,x,f7.3,A,x,f7.3)') 'Thermostat temperature:',T1*utemp,' --->',T2*utemp 
 write(*,'(x,A,x,f7.3)') 'Box length:',L
 write(*,*) 'Andersen Thermostat: ON'
 print*,''
 
 write(*,*) 'Output files generated into /data:'
-write(*,'(8x,A)') '125_dynamics_'//trim(ext)//'.xyz'
-write(*,'(8x,A)') '125_energy_'//trim(ext)//'.dat'
+write(*,'(8x,A)') trim(ext2)//'_dynamics_'//trim(ext)//'.xyz'
+write(*,'(8x,A)') trim(ext2)//'_energy_'//trim(ext)//'.dat'
 write(*,'(8x,A)') 'get_input.dat'
 write(102,'(A)') 'INPUT FILE'
-write(102,'(A)') 'results/125_energy_'//trim(ext)//'.dat'
+write(102,'(A)') 'results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat'  
 ! write(*,'(8x,A)') 'initial_vel.dat'
 ! write(*,'(8x,A)') 'final_vel.dat'
 write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
-write(*,'(8x,A)') '125_gdr_'//trim(ext)//'.dat'
-write(102,'(A)') 'results/125_gdr_'//trim(ext)//'.dat'
+write(*,'(8x,A)') trim(ext2)//'_gdr_'//trim(ext)//'.dat'
+write(102,'(A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
 write(102,'(A)') '1000'
 write(102,'(A)') ''
 write(102,'(A)') 'THIS INPUT FILE READS THE NAME OF THE OUTPUT FILES AND THE NUMBER OF STEPS NEEDED TO EQUILIBRATE THE SYSTEM'
@@ -134,7 +138,7 @@ enddo
 write(100,*) ''
 write(100,*) ''
 
-write(101,*) '# Density in g/cm^3:',density*mass/(6.022d0*1d23*(sig*1d-8)**3)
+write(101,*) '# Density in g/cm^3:',density*udens
 
 
 call calc_radial_dist_func(npar, density, nbins, pos, gdR,distances_gdR, 1)
@@ -182,9 +186,9 @@ do i=0,steps
         call calc_radial_dist_func(npar, density, nbins, pos, gdR, distances_gdR, 2)
         
         E_tot=(E+Upot)*eps !so it is in kJ/mol
-        t_i=eps*1d3/(6.022d0*1.380649d0)*t_i !so it is in K
-        P=eps*1d3/(6.022d0*1d23*(sig*1d-10)**3)*P !so it is in Pa
-        time=sqrt(mass*1d-3/(eps*1d3))*sig*1d-10*i*dt*1d12 !so it is in ps
+        t_i=utemp*t_i !so it is in K
+        P=upress*P !so it is in Pa
+        time=utime*i*dt !so it is in ps
         msd=msd*sig*sig    !so it is in Armstrongs
 
         write(101,*) time,Upot*eps,E*eps,E_tot,t_i,mom,P,msd
@@ -226,3 +230,21 @@ close(103)
 
 
 end program
+
+
+! ###########################################
+!               SUBROUTINE
+! ###########################################
+
+subroutine All_reduce(uener,mass,sigma,utime,utemp,upress,udens)
+
+    implicit none
+    real*8 :: mass,sigma,utime,utemp,uener,upress,udens
+
+    upress = uener*1d3/(6.022d0*1d23*(sigma*1d-10)**3)   !pressure in atm (J/mol)/A^3=10^30/6.022E23 Pa * 1atm/101325Pa
+    utemp  = uener*1d3/(6.022d0*1.380649d0)              ! temperature in Kelvin units (uener-->J/mol, 8.31---> J/(K·mol)
+    udens  = mass/(6.022d0*1d23*(sigma*1d-8)**3)         ! 0.6022: factor (10^-8)^3*(6.022^10^(-23))
+    utime  = sqrt(mass*1d-3/(uener*1d3))*sigma*1d2       ! unit time in picoseconds
+
+end subroutine
+
