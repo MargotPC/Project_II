@@ -103,9 +103,10 @@ with open("results/thermo_prop.dat","w") as outFile :
 	for i,label in enumerate(data_entrance):
 		outFile.write(f"{label:>15} {averages[i]} +/- {errors[i]} \n")
 
-# plotting the results
+# Plotting the results
 
-#plotting the energies
+
+# Plotting the energies
 start2=932
 plt.figure().set_figwidth(10)
 plt.plot(time[start:],uener[start:],label=f'Epot = {averages[0]:.4e} +/- {errors[0]:.4e}')
@@ -118,14 +119,17 @@ plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
 plt.savefig(fname='plots/energies.pdf',dpi=1000)
 plt.clf()
-#plotting temperatures
+
+
+# Plotting temperatures
 plt.plot(time[start:],temp[start:],label=f'Temp = {averages[3]:.4e} +/- {errors[3]:.4e} ')
 plt.xlabel('Time (ps)')
 plt.ylabel('Temperature (K)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-plt.savefig(fname='Temperature.pdf',dpi=1000)
+plt.savefig(fname='plots/Temperature.pdf',dpi=1000)
 plt.clf()
+
 
 # Plotting the momentum vs the time
 plt.plot(time[start:],mom[start:],label=f'Momentum = {averages[4]:.4e} +/- {errors[4]:.4e} ')
@@ -133,9 +137,9 @@ plt.xlabel('Time (ps)')
 plt.ylabel('Momentum (Kg · m /s)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-
 plt.savefig(fname='plots/Momentum.pdf',dpi=1000)
 plt.clf()
+
 
 # Plotting the momentum vs the time
 plt.plot(time[start:],press[start:],label=f'Pressure = {averages[5]:.4e} +/- {errors[5]:.4e} ')
@@ -143,27 +147,24 @@ plt.xlabel('Time (ps)')
 plt.ylabel('Pressure (Pa)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-
-
 plt.savefig(fname='plots/Pressure.pdf',dpi=1000)
 plt.clf()
 
 
+# Plotting the MSD
 plt.plot(time[start:],RMSD[start:],label=f'MSD = {averages[5]:.4e} +/- {errors[5]:.4e} ')
 plt.xlabel('Time (ps)')
 plt.ylabel('MSD ($\AA$)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
 
-
-
 plt.savefig(fname='plots/MSD.pdf',dpi=1000)
 plt.clf()
 
-#plotting gdr
+
+# Plotting GdR
 plt.plot(dist,gdr)
 plt.xlabel('Distance ($\AA$))')
 plt.ylabel('gdr ')
-
 
 plt.savefig(fname='plots/gdr.pdf',dpi=1000)
 plt.clf()
