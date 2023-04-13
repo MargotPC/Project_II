@@ -4,6 +4,33 @@ use init_pbc
 use module_forces
 contains
 subroutine time_step_v_verlet(pos,vel,L,dt,npar,cutoff,nprocs,myid,displs,counts,particles, pairs,pairindex,nu,sigma)
+    
+    !=============================================================================
+    ! Subroutine: time_step_v_verlet
+    ! Description: Performs one Verlet time-step for a molecular dynamics simulation.
+    !
+    !----------------------------- INPUT -----------------------------------------
+    ! pos - real8, dimension(npar,3): Matrix containing the x, y, z coordinates of the npar particles.
+    ! pos_old - real8, dimension(npar,3): Matrix containing the two previous x, y, z coordinates of the npar particles.
+    ! pos_aux - real8, dimension(npar,3): Matrix containing the previous x, y, z coordinates of the npar particles.
+    ! L - real8: Dimension of the simulation box.
+    ! dt - real8: Size of the time step.
+    ! npar - integer: Number of particles in the system.
+    ! cutoff - real8: Cutoff applied to the system.
+    ! nprocs - integer: Total number of processors in the MPI communicator.
+    ! myid - integer: Rank of the current processor in the MPI communicator.
+    ! displs - integer, dimension(nprocs): Displacements for the MPI_ALLGATHERV operation.
+    ! counts - integer, dimension(nprocs): Counts for the MPI_ALLGATHERV operation.
+    ! particles - integer, dimension(0:nprocs-1,2): Particle indices for each processor.
+    ! pairs - integer, dimension((npar*(npar-1))/2,2): Pairs of particles for computing forces.
+    ! nu - real8: Parameter for Andersen thermostat.
+    ! sigma - real8: Parameter for Andersen thermostat.
+    !
+    !----------------------------- OUTPUT ----------------------------------------
+    ! pos - real8, dimension(npar,3): Matrix containing the new x, y, z coordinates of the npar particles after applying PBC.
+    ! pos_aux - real8, dimension(npar,3): Previous pos.
+    !=============================================================================
+
     integer :: npar, nprocs, myid, ierr,comm,i,ii,dim
     real*8 :: L,cutoff2,cutoff6,cutoff4,cutoff12,Upot,dt,cutoff 
     real*8,dimension(npar,3) :: pos,F,lj_force,vel
