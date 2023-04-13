@@ -8,7 +8,7 @@ compile :
 run:
 	qsub run.sub
 
-runAll : run1 run2 run4 run8 run16 run32
+runAll : run1 run2 run4 run8 run16 run32 run48
 
 run1 : 
 	rm -f run1.out
@@ -16,7 +16,7 @@ run1 :
 
 run2 : 
 	rm -f run2.out
-	qsub -pe smp 2 -o "run2.out" run.sub 
+	qsub -pe smp 3 -o "run2.out" run.sub 
 
 run4 : 
 	rm -f run4.out
@@ -52,7 +52,7 @@ gettimes:
 	@tail -n 1 run8.out > 8.time
 	@tail -n 1 run16.out > 16.time
 	@tail -n 1 run32.out > 32.time
-	@tail -n 1 run4.out > 48.time
+	@tail -n 1 run48.out > 48.time
 
 generatetimes:
 	@echo -e "1 \t $(shell cat 1.time)" >> times.dat
