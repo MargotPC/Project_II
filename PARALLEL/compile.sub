@@ -33,6 +33,6 @@ endif
 mpif90 -O3 -c init_pbc.f90
 mpif90 -O3 -c module_calc_statistics.f90 
 mpif90 -O3 -c module_forces.f90
-mpif90 -O3 -c integrators_parallel.f90
+mpif90 -O3 -c integrators.f90
 mpif90 -O3 -c main.f90 
-mpif90 -O3 -o program.x init_pbc.o module_calc_statistics.o module_forces.o integrators_parallel.o main.o
+mpif90 -O3 -o program.x init_pbc.o module_calc_statistics.o module_forces.o integrators.o main.o
