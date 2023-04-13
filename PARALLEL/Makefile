@@ -8,7 +8,7 @@ compile :
 run:
 	qsub run.sub
 
-runAll : run1 run2 run4 run8 run16 run32 run48
+runAll : run1 run2 run4 run8 run16 run32 run40
 
 run1 : 
 	rm -f run1.out
@@ -34,9 +34,9 @@ run32 :
 	rm -f run32.out
 	qsub -pe smp 32 -o "run32.out" run.sub
 
-run48 : 
-	rm -f run48.out
-	qsub -pe smp 48 -o "run48.out" run.sub
+run40 : 
+	rm -f run40.out
+	qsub -pe smp 40 -o "run40.out" run.sub
 
 clust:
 	qstat -f
@@ -52,7 +52,7 @@ gettimes:
 	@tail -n 1 run8.out > 8.time
 	@tail -n 1 run16.out > 16.time
 	@tail -n 1 run32.out > 32.time
-	@tail -n 1 run48.out > 48.time
+	@tail -n 1 run40.out > 40.time
 
 generatetimes:
 	@echo -e "1 \t $(shell cat 1.time)" >> times.dat
@@ -61,7 +61,7 @@ generatetimes:
 	@echo -e "8 \t $(shell cat 8.time)" >> times.dat
 	@echo -e "16 \t $(shell cat 16.time)" >> times.dat
 	@echo -e "32 \t $(shell cat 32.time)" >> times.dat
-	@echo -e "48 \t $(shell cat 48.time)" >> times.dat  
+	@echo -e "40 \t $(shell cat 40.time)" >> times.dat  
 	@rm -f *.time
 	@echo 'times.dat generated succesfully'
 
@@ -84,7 +84,7 @@ help:
 	@echo -e '###    make run8:  Runs the code with 8 proc(s).'
 	@echo -e '###   make run16:  Runs the code with 16 proc(s).'
 	@echo -e '###   make run32:  Runs the code with 32 proc(s).'
-	@echo -e '###   make run48:  Runs the code with 48 proc(s).'
+	@echo -e '###   make run40:  Runs the code with 40 proc(s).'
 	@echo -e '###  make runAll:  Runs all the default codes.'
 	@echo -e '###      make SR:  Generates times.dat, a file containing the elapsed times per proc.'
 	@echo -e '###   make clean:  Removes all binary, error and log files.'
