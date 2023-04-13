@@ -11,7 +11,7 @@ use iso_fortran_env
 
 implicit none
 
-integer :: M,npar,i,n,j,seed,steps,limit,nbins,h,min,sec
+integer :: M,npar,i,n,j,k,icont,seed,steps,limit,nbins,h,min,sec
 real*8 :: density,cutoff,upot,cutoff4,cutoff6,cutoff12,cutoff2,L,dt,E,E_tot,mom,eps,mass,sig,msd
 real*8,allocatable, dimension(:,:) :: pos,lj_force,vel,initial_pos
 real*8,allocatable, dimension(:) :: gdR, distances_gdR
@@ -20,7 +20,7 @@ character(8) :: fmt,ext,ext2
 integer,dimension(3) :: M_values
 real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2,time1,time2
 integer :: myid,comm,ierr,nprocs,ii,part_per_worker,pair_per_worker,rest1,rest2
-integer, allocatable, dimension(:,:) :: pairs,particles,pairindex
+integer, allocatable, dimension(:,:) :: pairs,particles,pairindex,posindex
 integer, allocatable, dimension(:) :: displs, counts, seeds
 real*8 :: utime,utemp,upress,udens
 
@@ -88,6 +88,19 @@ if (myid.eq.0) then
 endif
 call random_seed(put=seeds)
 
+!----------------------------------------------------------------------
+!Define vector of index of particles (for init_scc subroutine)
+allocate(posindex(npar,3))
+icont=0
+do i = 1, M
+	do j = 1, M
+		do k = 1, M
+		icont = icont + 1
+		posindex(icont,:)= [i,j,k]
+		end do
+	end do
+end do
+!-----------------------------------------------------------------------
 !Define vector of pairs of particles (for the force and gdr subroutines)
 
 allocate(pairindex((npar*(npar-1))/2,2))
@@ -98,7 +111,7 @@ do i = 1,npar-1
         ii = ii + 1
     enddo
 enddo
-
+!_-----------------------------------------------------------------------
 
 !Define the division of information per worker. Pairs contains the pairs that each worker has to evaluate while particles contains the particles.
 !if it is not divisible, the partition is done as equitative as possible:
@@ -182,14 +195,13 @@ L=(npar/density)**(1.d0/3.d0) !box length
 cutoff=L/3.d0 !cutoff is set to a third of the box lenght
 allocate(gdR(nbins), distances_gdR(nbins))
 
-call init_scc(npar,3,L,pos,filename) !initial configuration could be generated if needed
+call init_scc(myid,nprocs,particles,counts,displs,posindex,npar,L,pos,filename) !initial configuration could be generated if needed
 ! call read_xyz(filename,npar,pos) !read the initial configuration from xyz file
 initial_pos = pos ! assign the initial positions to save it for the msd calculation
 
 
 if (myid.eq.0) then
-    
-    open(99,file='results/initial_conf_'//trim(ext)//'_sc.xyz')
+
     open(100, file='results/'//trim(ext2)//'_dynamics_'//trim(ext)//'.xyz')
     open(101, file='results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat')
     open(103, file='results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat')
@@ -216,13 +228,13 @@ if (myid.eq.0) then
     write(102,'(A)') 'results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat'
     ! write(*,'(8x,A)') 'initial_vel.dat'
     ! write(*,'(8x,A)') 'final_vel.dat'
-    write(*,'(8x,A)') 'results/initial_conf_'//trim(ext)//'_sc.xyz'
-    write(*,'(8x,A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
+    write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
+    write(*,'(8x,A)') trim(ext2)//'_gdr_'//trim(ext)//'.dat'
     write(102,'(A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
     write(102,'(A)') '1000'
     write(102,'(A)') ''
     write(102,'(A)') 'THIS INPUT FILE READS THE NAME OF THE OUTPUT FILES AND THE NUMBER OF STEPS NEEDED TO EQUILIBRATE THE SYSTEM'
-    close(102)
+
     print*, ''
     write(*,*) '~~~~ STARTING MOLECULAR DYNAMICS ~~~~'
 
@@ -231,11 +243,9 @@ if (myid.eq.0) then
 
     do j=1,npar!writes the initial configuration.
 
-        write(99,*) 'Xe',pos(j,:)
+        write(100,*) 'Xe',pos(j,:)
 
     enddo
-    
-    close(99)
 
     write(100,*) ''
     write(100,*) ''
