@@ -88,10 +88,7 @@ call init_scc(npar,3,L,pos,filename) !initial configuration could be generated i
 ! call read_xyz(filename,npar,pos) !read the initial configuration from xyz file
 initial_pos = pos ! assign the initial positions to save it for the msd calculation
 
-! write(ext,fmt) dt
-
-! ext=trim(ext)
-
+open(99, file='results/initial_conf_'//trim(ext)//'_sc.xyz')
 open(100, file='results/'//trim(ext2)//'_dynamics_'//trim(ext)//'.xyz')
 open(101, file='results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat')
 open(103, file='results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat')
@@ -122,7 +119,7 @@ write(102,'(A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
 write(102,'(A)') '1000'
 write(102,'(A)') ''
 write(102,'(A)') 'THIS INPUT FILE READS THE NAME OF THE OUTPUT FILES AND THE NUMBER OF STEPS NEEDED TO EQUILIBRATE THE SYSTEM'
-
+close(102)
 print*, ''
 write(*,*) '~~~~ STARTING MOLECULAR DYNAMICS ~~~~'
 
@@ -131,9 +128,11 @@ write(100,*) ''
 
 do j=1,npar!writes the initial configuration.
 
-    write(100,*) 'Xe',pos(j,:)
+    write(99,*) 'Xe',pos(j,:)
 
 enddo
+
+close(99)
 
 write(100,*) ''
 write(100,*) ''
