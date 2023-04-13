@@ -7,6 +7,7 @@ This directory contains all the necessary codes to perform a VdW simulation of a
 1. [ REQUIREMENTS ](#1-req)
 2. [ EXECUTION](#2-ex)
 3. [ RESULTS](#3-res)
+4. [ SPEEDUP](#4-speed)
 
 <a name="1-req"></a>
 ### REQUIREMENTS
@@ -33,17 +34,20 @@ After running your simulation with the default input file your `/results` direct
 
 ```Markdown
 
-125_dynamics_0.800.xyz    (contains the frames of the simulation in .xyz format)
-125_energy_0.800.dat      (Contains in this order time,potential energy,kinetic energy,total energy,instant temperature,momentum,pressure and msd of every frame)
-125_gdr_0.800.dat         (Contains the GDR and distances)
-125_msd_0.800.dat         (Contains time and MSD)
+125_dynamics_1.352.xyz    (contains the frames of the simulation in .xyz format)
+125_energy_1.352.dat      (Contains in this order time,potential energy,kinetic energy,total energy,instant temperature,momentum,pressure and msd of every frame)
+125_gdr_1.352.dat         (Contains the GDR and distances)
+125_msd_1.352.dat         (Contains time and MSD)
 thermo_prop.dat           (Contains the average values of all the thermodynamic properties)
-initial_conf_0.800.xyz    (Contains the frame of the starting configuration)
+initial_conf_1.352.xyz    (Contains the frame of the starting configuration)
 
 ```
 
-Notice that the files start with the number of particles of the system $M^3$ (125) and end with the value of the `density` (0.800) of the `input.dat` file respectively. 
+Notice that the files start with the number of particles of the system $M^3$ (125) and end with the value of the `density` (1.352) of the `input.dat` file respectively. 
 
 After running `Block_average_and_plots.py`, the `/plots` directory may contain all the plots required. It is important that the `/results` directory contains all the specified files!
 
+<a name="4-Speed"></a>
+### SPEEDUP
 
+Once you have used the `make runAll` option of the `Makefile` you can obtain all the elapsed times by using `make SR`. This will generate `times.dat`, a file containing the number of processors and the elapsed time of every simulation. You may use this data to perform the speedip of the system. 
