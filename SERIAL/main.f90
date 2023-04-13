@@ -14,7 +14,7 @@ real*8 :: density,cutoff,upot,cutoff4,cutoff6,cutoff12,cutoff2,L,dt,E,E_tot,mom,
 real*8,allocatable, dimension(:,:) :: pos,lj_force,vel,initial_pos
 real*8,allocatable, dimension(:) :: gdR, distances_gdR
 character(64) :: filename
-character(8) :: fmt,ext
+character(8) :: fmt,ext,ext2
 integer,dimension(3) :: M_values
 real*8 :: sigma,x1,x2,xout1,xout2,T,nu,t_i,P,time,T1,T2
 real*8 :: utime,utemp,upress,udens
