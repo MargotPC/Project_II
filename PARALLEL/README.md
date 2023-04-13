@@ -37,7 +37,6 @@ After running your simulation with the default input file your `/results` direct
 125_dynamics_1.352.xyz    (contains the frames of the simulation in .xyz format)
 125_energy_1.352.dat      (Contains in this order time,potential energy,kinetic energy,total energy,instant temperature,momentum,pressure and msd of every frame)
 125_gdr_1.352.dat         (Contains the GDR and distances)
-125_msd_1.352.dat         (Contains time and MSD)
 thermo_prop.dat           (Contains the average values of all the thermodynamic properties)
 initial_conf_1.352.xyz    (Contains the frame of the starting configuration)
 
