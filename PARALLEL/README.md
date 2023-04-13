@@ -50,4 +50,4 @@ After running `Block_average_and_plots.py`, the `/plots` directory may contain a
 <a name="4-Speed"></a>
 ### SPEEDUP
 
-Once you have used the `make runAll` option of the `Makefile` you can obtain all the elapsed times by using `make SR`. This will generate `times.dat`, a file containing the number of processors and the elapsed time of every simulation. You may use this data to perform the speedip of the system. 
+Once you have used the `make runAll` option of the `Makefile` you can obtain all the elapsed times by using `make SR`. This will generate `times.dat`, a file containing the number of processors and the elapsed time of every simulation. You may use this data to perform the speedup of the system. 
