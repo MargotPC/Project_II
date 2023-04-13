@@ -188,7 +188,8 @@ initial_pos = pos ! assign the initial positions to save it for the msd calculat
 
 
 if (myid.eq.0) then
-
+    
+    open(99,file='results/initial_conf_'//trim(ext)//'_sc.xyz')
     open(100, file='results/'//trim(ext2)//'_dynamics_'//trim(ext)//'.xyz')
     open(101, file='results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat')
     open(103, file='results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat')
@@ -215,13 +216,13 @@ if (myid.eq.0) then
     write(102,'(A)') 'results/'//trim(ext2)//'_energy_'//trim(ext)//'.dat'
     ! write(*,'(8x,A)') 'initial_vel.dat'
     ! write(*,'(8x,A)') 'final_vel.dat'
-    write(*,'(8x,A)') 'initial_conf_'//trim(ext)//'_sc.xyz'
-    write(*,'(8x,A)') trim(ext2)//'_gdr_'//trim(ext)//'.dat'
+    write(*,'(8x,A)') 'results/initial_conf_'//trim(ext)//'_sc.xyz'
+    write(*,'(8x,A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
     write(102,'(A)') 'results/'//trim(ext2)//'_gdr_'//trim(ext)//'.dat'
     write(102,'(A)') '1000'
     write(102,'(A)') ''
     write(102,'(A)') 'THIS INPUT FILE READS THE NAME OF THE OUTPUT FILES AND THE NUMBER OF STEPS NEEDED TO EQUILIBRATE THE SYSTEM'
-
+    close(102)
     print*, ''
     write(*,*) '~~~~ STARTING MOLECULAR DYNAMICS ~~~~'
 
@@ -230,9 +231,11 @@ if (myid.eq.0) then
 
     do j=1,npar!writes the initial configuration.
 
-        write(100,*) 'Xe',pos(j,:)
+        write(99,*) 'Xe',pos(j,:)
 
     enddo
+    
+    close(99)
 
     write(100,*) ''
     write(100,*) ''
