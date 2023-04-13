@@ -11,9 +11,7 @@ This directory contains all the necessary codes to perform a VdW simulation of a
 <a name="1-req"></a>
 ### REQUIREMENTS
 
-All codes used for the simulation have been created using _Fortran 90_. The visualization code `Block_average_and_plots.py` is in _python (3.11.2)_. In order to execute the code, the _[mpi90]_ compiler is needed. If you use a different compiler, change the `FC` varaible in the `Makefile`.
-
-COMPROVAR SI ESTAN EXPLICATS TOTS ELS REQUIREMENTS
+All codes used for the simulation have been created using _Fortran 90_. The visualization code `Block_average_and_plots.py` is in _python (3.11.2)_. In order to execute the code, the _[mpi90]_ compiler is needed. If you use a different compiler, change the `FC` varaible in the `Makefile`. If the code is running on a cluster, you may need to update the python version of the cluster. The `run.sub` file may need some adaptations depending on the cluster.
 
 In order to visualize the trajectories of the simulation as well as the initial configuration we used [VMD] but any visualization program that can read `.xyz` files can be used.
 
@@ -23,9 +21,7 @@ In order to visualize the trajectories of the simulation as well as the initial 
 <a name="2-ex"></a>
 ### EXECUTION
 
-When executing the code in a cluster, use the `Makefile` in order to perform your desired actions. First of all is necessary to compile the code in the cluster. This can be done using the `make compile` command on the cluster terminal. To run the code simply use `make run` on the cluster terminal. Notice that the default settings use only 4 cores but this can be changed in the `run.sub` file modifying the `#$ -pe smp` option.
-
-EXPLICAR LA EXECUTION DEL CODI PARALLEL
+When executing the code in a cluster, use the `Makefile` in order to perform your desired actions. First of all is necessary to compile the code in the cluster to generate the binary files. This can be done using the `make compile` (or just `make`) command on the cluster terminal. To run the code simply use `make run` on the cluster terminal. Notice that the default settings use only 4 cores but this can be changed in the `run.sub` file modifying the `#$ -pe smp` option.
 
 Before running your simulation, you may want to change the initial conditions for the system configuration. In order to do it, you should change the values of every varaible in the `input.dat` file. Notice that a file named `get_input.dat` is also generated but it is an input file for the ploting code and should not be changed if you want to plot the last generated data.
 
