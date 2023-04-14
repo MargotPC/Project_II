@@ -109,6 +109,7 @@ with open("results/thermo_prop.dat","w") as outFile :
 	outFile.write("# Mean values and errors for the studied thermodynamic properties.\n")
 	for i,label in enumerate(data_entrance):
 		outFile.write(f"{label:>15} {averages[i]} +/- {errors[i]} \n")
+	outFile.write(f" Difussion coefitient (cm^2/s): D = {D} ")
 
 # Plotting the results
 
