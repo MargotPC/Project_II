@@ -103,13 +103,13 @@ a,b = np.polyfit(time[start:],RMSD[start:],deg=1)     # linear fit to ax + b
 D = a/6   #*1e12 /1e20
 D=D*(10**(-16))*(10**(+12))
 
-print("Difussion coefitient (cm^2/s): D = ",D)
+print("Diffusion coefficient (cm^2/s): D = ",D)
 
 with open("results/thermo_prop.dat","w") as outFile :
 	outFile.write("# Mean values and errors for the studied thermodynamic properties.\n")
 	for i,label in enumerate(data_entrance):
 		outFile.write(f"{label:>15} {averages[i]} +/- {errors[i]} \n")
-	outFile.write(f" Difussion coefitient (cm^2/s): D = {D} ")
+	outFile.write(f" Diffusion coefficient (cm^2/s): D = {D} ")
 
 # Plotting the results
 
@@ -160,7 +160,7 @@ plt.clf()
 
 
 # Plotting the MSD
-plt.plot(time[start:],RMSD[start:],label=f"Difussion coefitient (cm^2/s): D = {D}")
+plt.plot(time[start:],RMSD[start:],label=f"Diffussion coefficient (cm^2/s): D = {D}")
 plt.xlabel('Time (ps)')
 plt.ylabel('MSD ($\AA$)')
 plt.legend(bbox_to_anchor=(1.1, 1.05),fancybox=True, shadow=True, ncol=5)
