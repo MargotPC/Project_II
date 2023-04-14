@@ -30,7 +30,7 @@ Use `make help` to get aditional information about the options of the make file.
 
 <a name="3-res"></a>
 ### RESULTS
-After running your simulation with the default input file your `/results` directory should contain the following files:
+After running your simulation with the default input file your `/results` [directory] should contain the following files:
 
 ```Markdown
 
@@ -45,6 +45,8 @@ initial_conf_1.352.xyz    (Contains the frame of the starting configuration)
 Notice that the files start with the number of particles of the system $M^3$ (125) and end with the value of the `density` (1.352) of the `input.dat` file respectively. 
 
 After running `Block_average_and_plots.py`, the `/plots` directory may contain all the plots required. It is important that the `/results` directory contains all the specified files!
+
+[directory]: https://github.com/Eines-Informatiques-Avancades/Project_II/tree/master/SERIAL
 
 <a name="4-Speed"></a>
 ### SPEEDUP
